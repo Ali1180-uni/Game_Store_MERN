@@ -9,7 +9,7 @@ const port = Number(process.env.PORT ?? 5000);
 
 app.use(express.json());
 
-app.get("/health", (req:Request, res:Response<{ok: boolean}>) => {
+app.get("/GameVault", (req:Request, res:Response<{ok: boolean}>) => {
   res.json({ ok: true });
 });
 
