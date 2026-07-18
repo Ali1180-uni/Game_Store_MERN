@@ -1,125 +1,185 @@
 import { useRef } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import controllerImg from "../../public/images/controller.png";
+import { motion, useMotionValue, useTransform } from "framer-motion";
+import consoleImg from "../../public/images/ps5.png";
 
 const Hero = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
 
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
+  // Cursor ambient glow
+  const fieldX = useMotionValue(50);
+  const fieldY = useMotionValue(50);
 
-  const springConfig = { stiffness: 150, damping: 20, mass: 0.5 };
-
-  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [10, -10]), springConfig);
-  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-10, 10]), springConfig);
-
-  const translateX = useSpring(useTransform(mouseX, [-0.5, 0.5], [-20, 20]), springConfig);
-  const translateY = useSpring(useTransform(mouseY, [-0.5, 0.5], [-20, 20]), springConfig);
-
-  const bgTranslateX = useTransform(translateX, (v) => v * 1.4);
-  const bgTranslateY = useTransform(translateY, (v) => v * 1.4);
-
-  function handleMouseMove(e: React.MouseEvent) {
-    const rect = containerRef.current?.getBoundingClientRect();
+  function handleHeroMouseMove(e: React.MouseEvent) {
+    const rect = heroRef.current?.getBoundingClientRect();
     if (!rect) return;
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    mouseX.set(x);
-    mouseY.set(y);
+
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+    fieldX.set(x);
+    fieldY.set(y);
   }
 
-  function handleMouseLeave() {
-    mouseX.set(0);
-    mouseY.set(0);
-  }
+  const fieldGlowBackground = useTransform(
+    [fieldX, fieldY],
+    ([x, y]) =>
+      `radial-gradient(650px circle at ${x}% ${y}%, rgba(110,70,255,0.10), transparent 70%)`
+  );
 
   return (
-    <section className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-neutral-950 via-neutral-900 to-black overflow-hidden">
-      <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 items-center gap-10 px-8">
-        <div className="z-10">
+    <section
+      ref={heroRef}
+      onMouseMove={handleHeroMouseMove}
+      className="relative min-h-screen overflow-hidden bg-gradient-to-b from-neutral-950 via-neutral-900 to-black flex items-center justify-center"
+    >
+      {/* Cursor Ambient Glow */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: fieldGlowBackground }}
+      />
+
+      {/* Grid */}
+      <div
+        className="absolute inset-0 opacity-[0.03] pointer-events-none"
+        style={{
+          backgroundImage:
+            "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg,#fff 1px,transparent 1px)",
+          backgroundSize: "48px 48px",
+        }}
+      />
+
+      <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 items-center gap-16 px-6 py-24 md:grid-cols-2">
+
+        {/* LEFT */}
+        <div>
+
           <motion.p
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-blue-400 text-sm font-medium tracking-widest uppercase mb-4"
+            transition={{ duration: .5 }}
+            className="mb-4 uppercase tracking-[0.25em] text-sm font-medium text-violet-400"
           >
-            Next-gen precision
+            Play Has No Limits
           </motion.p>
 
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-5xl md:text-6xl font-bold text-white leading-tight mb-6"
+            transition={{ duration: .6 }}
+            className="text-5xl md:text-7xl font-black leading-[1.05] text-white"
           >
-            Feel every
+            Power Meets
             <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
-              vibration
+
+            <span className="bg-gradient-to-r from-violet-400 via-fuchsia-300 to-sky-400 bg-clip-text text-transparent">
+              Silence
             </span>
+
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-neutral-400 text-base max-w-md mb-8 leading-relaxed"
+            transition={{ delay: .15 }}
+            className="mt-7 max-w-lg text-neutral-400 leading-8"
           >
-            Haptic feedback and adaptive triggers put you inside the game.
-            The DualSense controller redefines how you play.
+            Ultra-fast loading, breathtaking visuals, and immersive haptics.
+            Experience the next generation of gaming with the PlayStation 5 Slim.
           </motion.p>
 
-          <motion.button
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="bg-white text-black px-8 py-3 rounded-full font-medium text-sm"
-          >
-            Shop now
-          </motion.button>
-        </div>
-
-        <div
-          ref={containerRef}
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
-          className="relative flex items-center justify-center h-[420px]"
-          style={{ perspective: "1200px" }}
-        >
           <motion.div
-            className="pointer-events-none absolute w-72 h-72 rounded-full bg-blue-500/20 blur-3xl"
-            style={{ x: translateX, y: translateY }}
-          />
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: .25 }}
+            className="mt-10 flex gap-5"
+          >
 
-          <motion.img
-            src={controllerImg}
-            alt=""
-            aria-hidden="true"
-            className="absolute w-3/4 max-w-[380px] opacity-30 blur-md"
-            style={{
-              x: bgTranslateX,
-              y: bgTranslateY,
-              rotateX,
-              rotateY,
-            }}
-          />
+            <motion.button
+              whileHover={{
+                scale: 1.05,
+                boxShadow: "0 0 40px rgba(255,255,255,.18)",
+              }}
+              whileTap={{ scale: .95 }}
+              className="rounded-full bg-white px-8 py-3 font-semibold text-black"
+            >
+              Shop Now
+            </motion.button>
 
-          <motion.img
-            src={controllerImg}
-            alt="Sony DualSense PS5 controller"
-            className="relative z-10 w-3/4 max-w-[380px] drop-shadow-2xl"
-            style={{
-              x: translateX,
-              y: translateY,
-              rotateX,
-              rotateY,
-            }}
-            whileHover={{ scale: 1.04 }}
-            transition={{ type: "spring", stiffness: 200, damping: 18 }}
-          />
+            <motion.button
+              whileHover={{
+                scale: 1.05,
+                borderColor: "#8B5CF6",
+              }}
+              whileTap={{ scale: .95 }}
+              className="rounded-full border border-neutral-700 px-8 py-3 font-semibold text-white"
+            >
+              Learn More
+            </motion.button>
+
+          </motion.div>
+
         </div>
+
+        {/* RIGHT */}
+        <motion.div
+          initial="rest"
+          whileHover="hover"
+          className="relative flex items-center justify-center"
+        >
+
+          {/* Purple Glow */}
+          <motion.div
+            variants={{
+              rest: {
+                opacity: .45,
+                scale: 1,
+              },
+              hover: {
+                opacity: .95,
+                scale: 1.18,
+              },
+            }}
+            transition={{
+              duration: .4,
+              ease: "easeOut",
+            }}
+            className="absolute h-[360px] w-[360px] rounded-full bg-violet-600/30 blur-[120px]"
+          />
+
+          {/* Console */}
+          <motion.img
+            src={consoleImg}
+            alt="PlayStation 5 Slim"
+            initial={{
+              opacity: 0,
+              y: 30,
+            }}
+            animate={{
+              opacity: 1,
+              y: [0, -10, 0],
+            }}
+            whileHover={{
+              scale: 1.04,
+            }}
+            transition={{
+              opacity: {
+                duration: .8,
+              },
+              y: {
+                repeat: Infinity,
+                duration: 5,
+                ease: "easeInOut",
+              },
+              scale: {
+                duration: .3,
+              },
+            }}
+            className="relative z-10 w-full max-w-[440px] select-none drop-shadow-[0_40px_80px_rgba(0,0,0,.65)]"
+            draggable={false}
+          />
+
+        </motion.div>
+
       </div>
     </section>
   );
