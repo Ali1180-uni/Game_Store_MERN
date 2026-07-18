@@ -30,7 +30,7 @@ const Hero = () => {
     <section
       ref={heroRef}
       onMouseMove={handleHeroMouseMove}
-      className="relative min-h-screen overflow-hidden bg-gradient-to-b from-neutral-950 via-neutral-900 to-black flex items-center justify-center"
+      className="relative min-h-screen overflow-hidden bg-linear-to-b from-neutral-950 via-neutral-900 to-black flex items-center justify-center"
     >
       {/* Cursor Ambient Glow */}
       <motion.div
@@ -71,7 +71,7 @@ const Hero = () => {
             Power Meets
             <br />
 
-            <span className="bg-gradient-to-r from-violet-400 via-fuchsia-300 to-sky-400 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-violet-400 via-fuchsia-300 to-sky-400 bg-clip-text text-transparent">
               Silence
             </span>
 
@@ -143,7 +143,7 @@ const Hero = () => {
               duration: .4,
               ease: "easeOut",
             }}
-            className="absolute h-[360px] w-[360px] rounded-full bg-violet-600/30 blur-[120px]"
+            className="absolute h-90 w-90 rounded-full bg-violet-600/30 blur-[120px]"
           />
 
           {/* Console */}
@@ -174,7 +174,7 @@ const Hero = () => {
                 duration: .3,
               },
             }}
-            className="relative z-10 w-full max-w-[440px] select-none drop-shadow-[0_40px_80px_rgba(0,0,0,.65)]"
+            className="relative z-10 w-full max-w-110 select-none drop-shadow-[0_40px_80px_rgba(0,0,0,.65)]"
             draggable={false}
           />
 

@@ -3,13 +3,14 @@ import { createRoot } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { BrowserRouter } from 'react-router-dom'
+import "leaflet/dist/leaflet.css"
 import './index.css'
 import App from './App.tsx'
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 60 * 1000,      // 1 min — tune per your data volatility
+      staleTime: 60 * 1000,
       retry: 1,
       refetchOnWindowFocus: false,
     },
