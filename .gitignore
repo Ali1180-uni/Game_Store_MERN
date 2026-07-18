@@ -25,7 +25,7 @@ dist-ssr
 
 # Environment files
 .env
-.mp4
+backVideo.mp4
 .env.*
 
 # TypeScript build metadata
