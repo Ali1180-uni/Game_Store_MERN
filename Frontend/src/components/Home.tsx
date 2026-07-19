@@ -3,6 +3,8 @@ import img from "../../public/images/poster.jpg";
 import ShowCase from "./ShowCase";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { useRef } from "react";
+import Games from "../../public/images/Games/data.json";
+import Accesssories from "../../public/images/Accessories/data.json";
 
 const Home = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -84,7 +86,7 @@ const scale = useTransform(smooth, [0, 1], [0.98, 1]);
         </div>
       </section>
 
-      <ShowCase />
+      <ShowCase games={Games} accessories={Accesssories} />
     </div>
   );
 };

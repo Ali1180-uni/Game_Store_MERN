@@ -1,0 +1,87 @@
+[
+  {
+    "id": "airbuds",
+    "image": "/images/Accessories/airbuds.jpg",
+    "name": "Air Buds"
+  },
+  {
+    "id": "chair",
+    "image": "/images/Accessories/chair.jpg",
+    "name": "Gaming Chair"
+  },
+  {
+    "id": "headset",
+    "image": "/images/Accessories/headset.jpg",
+    "name": "Gaming Headset"
+  },
+  {
+    "id": "keyboard-mouse",
+    "image": "/images/Accessories/keyboard%20mouse.jpg",
+    "name": "Keyboard Mouse Combo"
+  },
+  {
+    "id": "mic",
+    "image": "/images/Accessories/mic.jpg",
+    "name": "Microphone"
+  },
+  {
+    "id": "nintendo",
+    "image": "/images/Accessories/nintendo.jpg",
+    "name": "Nintendo"
+  },
+  {
+    "id": "Radeon RX",
+    "image": "/images/Accessories/GPU/ASUS.jpg",
+    "name": "Radeon RX"
+  },
+  {
+    "id": "ram",
+    "image": "/images/Accessories/ram.jpg",
+    "name": "RAM"
+  },
+  {
+    "id": "ps-controller",
+    "image": "/images/Accessories/PS/controller.png",
+    "name": "PlayStation Controller"
+  },
+  {
+    "id": "ps5-black",
+    "image": "/images/Accessories/PS/PS5%20BLACK.jpg",
+    "name": "PS5 Black"
+  },
+  {
+    "id": "ps5",
+    "image": "/images/Accessories/PS/ps5.jpg",
+    "name": "PS5"
+  },
+  {
+    "id": "RTX5090",
+    "image": "/images/Accessories/GPU/RTX5090.jpg",
+    "name": "RTX 5090"
+  },
+  {
+    "id": "xbox-36o",
+    "image": "/images/Accessories/Xbox/xbox%2036o.jpg",
+    "name": "Xbox 36o"
+  },
+  {
+    "id": "xbox-series-x",
+    "image": "/images/Accessories/Xbox/XBOX%20Series%20X%20_%20XBOX.jpg",
+    "name": "Xbox Series X"
+  },
+  {
+    "id": "RTX",
+    "image": "/images/Accessories/GPU/Rtx3050.jpg",
+    "name": "RTX"
+  },
+  {
+    "id": "xbox",
+    "image": "/images/Accessories/Xbox/xbox.jpg",
+    "name": "Xbox"
+  },
+  {
+    "id": "GTX",
+    "image": "/images/Accessories/GPU/Gtx1050.jpg",
+    "name": "GTX"
+  }
+]

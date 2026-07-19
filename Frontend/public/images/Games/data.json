@@ -1,0 +1,112 @@
+[
+	{
+		"id": "battlefield",
+		"image": "/images/Games/Battlefield.jpg",
+		"name": "Battlefield"
+	},
+	{
+		"id": "black-myth",
+		"image": "/images/Games/Black%20Myth.jpg",
+		"name": "Black Myth"
+	},
+	{
+		"id": "call-of-duty-modern-warfare-ii",
+		"image": "/images/Games/Call%20of%20Duty_%20Modern%20Warfare%20II%20-%20PS5%20-%20Playstation%205%20-%20Import%20Region%20Free.jpg",
+		"name": "Call of Duty: Modern Warfare II"
+	},
+	{
+		"id": "call-of-duty-modern-warfare-iii",
+		"image": "/images/Games/Call%20of%20Duty%C2%AE_%20Modern%20Warfare%C2%AE%20III%20-PS5%E2%84%A2.jpg",
+		"name": "Call of Duty: Modern Warfare III"
+	},
+	{
+		"id": "cyberpunk-2077",
+		"image": "/images/Games/Cyberpunk%202077%20is%20second%20biggest%20retail%20launch%20of%202020%20%E2%80%93%20Games%20charts%2012%20December.jpg",
+		"name": "Cyberpunk 2077"
+	},
+	{
+		"id": "ea-sports-f1-24",
+		"image": "/images/Games/EA%20SPORTS%20F1%2024%20Standard%20Edition%20PS5%20_%20VideoGame%E2%80%A6.jpg",
+		"name": "EA SPORTS F1 24"
+	},
+	{
+		"id": "elden-ring",
+		"image": "/images/Games/eldenring.jpg",
+		"name": "Elden Ring"
+	},
+	{
+		"id": "fortnite",
+		"image": "/images/Games/fortnite.jpg",
+		"name": "Fortnite"
+	},
+	{
+		"id": "ghost",
+		"image": "/images/Games/ghost.jpg",
+		"name": "Ghost"
+	},
+	{
+		"id": "gta-6",
+		"image": "/images/Games/GTA6.jpg",
+		"name": "GTA 6"
+	},
+	{
+		"id": "hogwarts-legacy",
+		"image": "/images/Games/Hogwarts%20Legacy%20PS5%20(Amazon%20Exclusive)%20!!!.jpg",
+		"name": "Hogwarts Legacy"
+	},
+	{
+		"id": "it-takes-two",
+		"image": "/images/Games/IT%20TAKES%20TWO%20-%20(inkl_%20kostenloser%20Update%20auf%20PS5%20Version)%20-%20%5BPlaystation%204%5D%20-%20Import%20allemand.jpg",
+		"name": "It Takes Two"
+	},
+	{
+		"id": "minecraft",
+		"image": "/images/Games/Minecraft%20-%20Compatible%20for%20PS5%20-%20UK%20PAL.jpg",
+		"name": "Minecraft"
+	},
+	{
+		"id": "mortal-kombat-1",
+		"image": "/images/Games/Mortal%20Kombat%201%20Premium%20Edition%20%E2%80%93%20PlayStation5%20_%20Must%20Play.jpg",
+		"name": "Mortal Kombat 1"
+	},
+	{
+		"id": "astro-bot",
+		"image": "/images/Games/PlayStation%20Astro%20Bot%20Adventure%20Game%20-%20PlayStation%205%20-%20Walmart_com.jpg",
+		"name": "Astro Bot"
+	},
+	{
+		"id": "ps5-price-report",
+		"image": "/images/Games/PS5%20games%20were%20going%20to%20be%20even%20more%20expensive%20than%20%C2%A370%20claims%20report.jpg",
+		"name": "PS5 Games Report"
+	},
+	{
+		"id": "resident-evil-requiem",
+		"image": "/images/Games/RESIDENT%20EVIL%20REQUIEM%20(2026)%20PLAYSTATION%205.jpg",
+		"name": "Resident Evil Requiem"
+	},
+	{
+		"id": "spider-man-2",
+		"image": "/images/Games/Spider-Man%202%20PS5.jpg",
+		"name": "Spider-Man 2"
+	},
+	{
+		"id": "tekken-8",
+		"image": "/images/Games/tekken%208.jpg",
+		"name": "Tekken 8"
+	},
+	{
+		"id": "the-last-of-us-part-1",
+		"image": "/images/Games/The%20Last%20of%20Us%20Part%201%20PS5.jpg",
+		"name": "The Last of Us Part I"
+	},
+	{
+		"id": "the-witcher-3",
+		"image": "/images/Games/The%20Witcher%203_%20Wild%20Hunt%20Complete%20Edition%20Playstation%205.jpg",
+		"name": "The Witcher 3"
+	},
+	{
+		"id": "uncharted-5",
+		"image": "/images/Games/UNCHARTED%205.jpg",
+		"name": "Uncharted 5"
+	}
+]
