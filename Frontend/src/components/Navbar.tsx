@@ -21,7 +21,7 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-[9999] w-full flex items-center justify-between px-6 md:px-10 py-4 bg-white dark:bg-neutral-950 border-b border-gray-100 dark:border-neutral-800">
+    <nav className="fixed top-0 left-0 right-0 z-9999 w-full flex items-center justify-between px-6 md:px-10 py-4 bg-white dark:bg-neutral-950 border-b border-gray-100 dark:border-neutral-800">
       <NavLink
         to="/GameVault"
         className="flex items-center gap-2 text-lg font-bold text-black dark:text-white shrink-0"

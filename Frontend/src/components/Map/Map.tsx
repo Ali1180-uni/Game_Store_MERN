@@ -1,45 +1,28 @@
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Tooltip } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import L from "leaflet";
-
-import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
-import markerIcon from "leaflet/dist/images/marker-icon.png";
-import markerShadow from "leaflet/dist/images/marker-shadow.png";
-
-const defaultIconPrototype = L.Icon.Default.prototype as L.Icon.Default & {
-  _getIconUrl?: () => string;
-};
-
-delete defaultIconPrototype._getIconUrl;
-
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: markerIcon2x,
-  iconUrl: markerIcon,
-  shadowUrl: markerShadow,
-});
-
-// Replace with your shop coordinates
-const shopLocation: [number, number] = [31.4504, 73.1350];
+const shopLocation: [number, number] = [31.40611, 73.102239];
 
 const Map = () => {
   return (
     <MapContainer
       center={shopLocation}
       zoom={15}
-      scrollWheelZoom={false}
+      scrollWheelZoom={true}
       className="h-112.5 w-full rounded-xl"
     >
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
+        attribution='&copy; <a href="https://www.openstreetmap.org/">GameVault</a>'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
       <Marker position={shopLocation}>
-        <Popup>
-          <strong>Game Store</strong>
-          <br />
-          Faisalabad, Pakistan
-        </Popup>
+        <Tooltip permanent direction="top" offset={[-14, -10]}>
+          <div className="text-center font-semibold">
+            <strong>GameVault</strong>
+            <br />
+            Faisalabad, Pakistan
+          </div>
+        </Tooltip>
       </Marker>
     </MapContainer>
   );
