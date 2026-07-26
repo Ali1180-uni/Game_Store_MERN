@@ -7,19 +7,23 @@ import Accessories from "./components/Accessories";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Footer from "./components/Footer";
+import Error from "./components/Error";
 
 function App() {
   return (
     <>
       <Navbar />
-      <Routes>
-        <Route path="/GameVault" element={<Home />} />
-        <Route path="/GameVault/Games" element={<Games />} />
-        <Route path="/GameVault/About" element={<About />} />
-        <Route path="/GameVault/Accessories" element={<Accessories />} />
-        <Route path="/GameVault/login" element={<Login />} />
-        <Route path="/GameVault/register" element={<Register />} />
-      </Routes>
+      <div className="pt-20">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/Games" element={<Games />} />
+          <Route path="/About" element={<About />} />
+          <Route path="/Accessories" element={<Accessories />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="*" element={<Error />} />
+        </Routes>
+      </div>
       <Footer />
     </>
   );

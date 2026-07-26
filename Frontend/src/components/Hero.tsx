@@ -88,7 +88,7 @@ const Hero = () => {
             className="mt-10 flex gap-5"
           >
             <MotionNavLink
-              to="/GameVault/Games"
+              to="/Games"
               whileHover={{
                 scale: 1.05,
                 boxShadow: "0 0 40px rgba(255,255,255,.18)",
@@ -100,7 +100,7 @@ const Hero = () => {
             </MotionNavLink>
 
             <MotionNavLink
-              to="/GameVault/About"
+              to="/About"
               whileHover={{
                 scale: 1.05,
                 borderColor: "#8B5CF6",
