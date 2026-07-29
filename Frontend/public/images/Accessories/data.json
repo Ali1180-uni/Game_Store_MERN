@@ -2,86 +2,120 @@
   {
     "id": "airbuds",
     "image": "/images/Accessories/airbuds.jpg",
-    "name": "Air Buds"
+    "title": "Air Buds",
+    "price": 49.99,
+    "description": "Enjoy crystal-clear sound, deep bass, and long-lasting battery life with these wireless earbuds."
   },
   {
     "id": "chair",
     "image": "/images/Accessories/chair.jpg",
-    "name": "Gaming Chair"
+    "title": "Gaming Chair",
+    "price": 249.99,
+    "description": "Ergonomic gaming chair with adjustable armrests, lumbar support, and premium comfort for long sessions."
   },
   {
     "id": "headset",
     "image": "/images/Accessories/headset.jpg",
-    "name": "Gaming Headset"
+    "title": "Gaming Headset",
+    "price": 89.99,
+    "description": "Immersive surround sound headset with noise-canceling microphone for competitive gaming."
   },
   {
     "id": "keyboard-mouse",
     "image": "/images/Accessories/keyboard%20mouse.jpg",
-    "name": "Keyboard Mouse Combo"
+    "title": "Keyboard Mouse Combo",
+    "price": 79.99,
+    "description": "Responsive RGB mechanical keyboard and precision gaming mouse combo built for performance."
   },
   {
     "id": "mic",
     "image": "/images/Accessories/mic.jpg",
-    "name": "Microphone"
+    "title": "Microphone",
+    "price": 99.99,
+    "description": "Professional USB microphone delivering clear voice quality for streaming, gaming, and podcasts."
   },
   {
     "id": "nintendo",
     "image": "/images/Accessories/nintendo.jpg",
-    "name": "Nintendo"
+    "title": "Nintendo Switch",
+    "price": 299.99,
+    "description": "Portable gaming console offering versatile handheld and docked gameplay with exclusive Nintendo titles."
   },
   {
     "id": "Radeon RX",
     "image": "/images/Accessories/GPU/ASUS.jpg",
-    "name": "Radeon RX"
+    "title": "Radeon RX Graphics Card",
+    "price": 649.99,
+    "description": "High-performance AMD Radeon RX graphics card designed for smooth 1440p and 4K gaming."
   },
   {
     "id": "ram",
     "image": "/images/Accessories/ram.jpg",
-    "name": "RAM"
+    "title": "Gaming RAM",
+    "price": 119.99,
+    "description": "High-speed DDR5 memory module that enhances multitasking and gaming performance."
   },
   {
     "id": "ps-controller",
     "image": "/images/Accessories/PS/controller.png",
-    "name": "PlayStation Controller"
+    "title": "PlayStation Controller",
+    "price": 69.99,
+    "description": "Official DualSense wireless controller featuring adaptive triggers and immersive haptic feedback."
   },
   {
     "id": "ps5-black",
     "image": "/images/Accessories/PS/PS5%20BLACK.jpg",
-    "name": "PS5 Black"
+    "title": "PS5 Black Edition",
+    "price": 599.99,
+    "description": "Limited-edition PlayStation 5 console with sleek black finish and next-generation gaming performance."
   },
   {
     "id": "ps5",
     "image": "/images/Accessories/PS/ps5.jpg",
-    "name": "PS5"
+    "title": "PlayStation 5",
+    "price": 549.99,
+    "description": "Experience ultra-fast loading, ray tracing, and stunning 4K gaming with the PlayStation 5."
   },
   {
     "id": "RTX5090",
     "image": "/images/Accessories/GPU/RTX5090.jpg",
-    "name": "RTX 5090"
+    "title": "NVIDIA RTX 5090",
+    "price": 1999.99,
+    "description": "Flagship NVIDIA graphics card delivering unmatched AI performance and cutting-edge ray tracing."
   },
   {
     "id": "xbox-36o",
     "image": "/images/Accessories/Xbox/xbox%2036o.jpg",
-    "name": "Xbox 36o"
+    "title": "Xbox 360",
+    "price": 149.99,
+    "description": "Classic Xbox console featuring a huge library of legendary games and entertainment features."
   },
   {
     "id": "xbox-series-x",
     "image": "/images/Accessories/Xbox/XBOX%20Series%20X%20_%20XBOX.jpg",
-    "name": "Xbox Series X"
+    "title": "Xbox Series X",
+    "price": 549.99,
+    "description": "Microsoft's most powerful console with lightning-fast load times and true 4K gaming."
   },
   {
     "id": "RTX",
     "image": "/images/Accessories/GPU/Rtx3050.jpg",
-    "name": "RTX"
+    "title": "NVIDIA RTX 3050",
+    "price": 299.99,
+    "description": "Affordable RTX graphics card with ray tracing and DLSS support for modern gaming."
   },
   {
     "id": "xbox",
     "image": "/images/Accessories/Xbox/xbox.jpg",
-    "name": "Xbox"
+    "title": "Xbox Console",
+    "price": 399.99,
+    "description": "Powerful gaming console offering access to hundreds of games and Xbox Game Pass compatibility."
   },
   {
     "id": "GTX",
     "image": "/images/Accessories/GPU/Gtx1050.jpg",
-    "name": "GTX"
+    "title": "NVIDIA GTX 1050",
+    "price": 149.99,
+    "description": "Reliable entry-level graphics card ideal for esports titles and everyday gaming."
   }
 ]
