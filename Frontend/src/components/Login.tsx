@@ -20,7 +20,6 @@ const Login = () => {
 
   return (
     <div className="grid min-h-screen grid-cols-1 md:grid-cols-2">
-      {/* LEFT — black side with animated controller */}
       <div className="hidden flex-col items-center justify-center bg-black px-10 md:flex">
         <div className="w-full max-w-sm">
           <DotLottieReact
@@ -36,8 +35,6 @@ const Login = () => {
           Sign in to grab the latest drops and manage your orders.
         </p>
       </div>
-
-      {/* RIGHT — white side with form */}
       <div className="flex items-center justify-center bg-white px-4 py-12">
         <div className="w-full max-w-sm">
           <h1 className="mb-6 text-xl font-semibold text-slate-900">Login</h1>
@@ -52,7 +49,13 @@ const Login = () => {
               </label>
               <input
                 id="email"
-                {...register("email")}
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: "Invalid email address",
+                  },
+                })}
                 placeholder="you@example.com"
                 className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm text-slate-900
                        placeholder:text-slate-400 transition-colors
@@ -75,14 +78,19 @@ const Login = () => {
               </label>
               <input
                 id="password"
-                {...register("password")}
+                {...register("password", {
+                  required: "Password is required",
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters",
+                  },
+                })}
                 type="password"
-                minLength={6}
-                placeholder="••••••••"
+                placeholder="password"
                 className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm text-slate-900
-                       placeholder:text-slate-400 transition-colors
-                       hover:border-slate-400
-                       focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500/30"
+         placeholder:text-slate-400 transition-colors
+         hover:border-slate-400
+         focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500/30"
               />
               {errors.password && (
                 <p className="mt-1.5 text-sm text-red-600">
