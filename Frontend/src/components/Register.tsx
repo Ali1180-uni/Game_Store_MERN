@@ -21,7 +21,6 @@ const Register = () => {
 
   return (
     <div className="grid min-h-screen grid-cols-1 md:grid-cols-2">
-      {/* LEFT — black side with animated controller */}
       <div className="hidden flex-col items-center justify-center bg-black px-10 md:flex">
         <div className="w-full max-w-sm">
           <DotLottieReact
