@@ -9,10 +9,13 @@ import Register from "./components/Register";
 import Footer from "./components/Footer";
 import Error from "./components/Error";
 import ProductPage from "./components/ProductPage";
+import { Provider } from "react-redux";
+import { store } from "./Redux/store";
+import CartBar from "./components/CartBar";
 
 function App() {
   return (
-    <>
+    <Provider store={store}>
       <Navbar />
       <div className="pt-20 flex min-h-screen flex-col bg-black">
         <Routes>
@@ -26,8 +29,9 @@ function App() {
           <Route path="*" element={<Error />} />
         </Routes>
       </div>
+      <CartBar />
       <Footer />
-    </>
+    </Provider>
   );
 }
 

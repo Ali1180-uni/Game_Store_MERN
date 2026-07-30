@@ -5,6 +5,8 @@ import games from "../../public/images/Games/data.json";
 import accessories from "../../public/images/Accessories/data.json";
 import StarRating from "./Rating Stars/stars";
 import Review from "./Review";
+import { useAppDispatch } from "../Redux/hook";
+import { addItem } from "../Redux/CartSlice/cartSlice";
 
 type ReviewEntry = {
   id: string;
@@ -21,8 +23,11 @@ type ReviewFormData = {
 const MAX_COMMENT_LENGTH = 500;
 
 const ProductPage = () => {
+  const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
-  const product = games.find((g) => String(g.id) === id) || accessories.find((a) => String(a.id) === id);
+  const product =
+    games.find((g) => String(g.id) === id) ||
+    accessories.find((a) => String(a.id) === id);
 
   const [reviews, setReviews] = useState<ReviewEntry[]>([
     { id: "seed-1", user: "Ali", rating: 3, comment: "Great product!" },
@@ -104,7 +109,10 @@ const ProductPage = () => {
             <button className="flex-1 rounded-lg bg-violet-600 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-violet-700 sm:px-8">
               Buy Now
             </button>
-            <button className="flex-1 rounded-lg border border-neutral-700 bg-neutral-900 py-3.5 text-sm font-semibold text-white transition-colors hover:border-violet-500/50 hover:bg-neutral-800 sm:px-8">
+            <button
+              onClick={() => dispatch(addItem())}
+              className="flex-1 rounded-lg border border-neutral-700 bg-neutral-900 py-3.5 text-sm font-semibold text-white transition-colors hover:border-violet-500/50 hover:bg-neutral-800 sm:px-8"
+            >
               Add to Cart
             </button>
           </div>

@@ -5,11 +5,8 @@ import error from "../../public/images/error.gif";
 const Error = () => {
   return (
     <section className="relative min-h-screen w-full flex items-center justify-center bg-neutral-950 overflow-hidden px-6">
-      {/* Ambient glows matching site palette */}
       <div className="pointer-events-none absolute top-1/4 -left-32 w-96 h-96 rounded-full bg-red-500/10 blur-[100px]" />
       <div className="pointer-events-none absolute bottom-1/4 -right-32 w-96 h-96 rounded-full bg-purple-500/10 blur-[100px]" />
-
-      {/* Grid texture for depth, consistent with Hero */}
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.03]"
         style={{
