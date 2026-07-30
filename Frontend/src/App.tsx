@@ -8,6 +8,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import Footer from "./components/Footer";
 import Error from "./components/Error";
+import ProductPage from "./components/ProductPage";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/Accessories" element={<Accessories />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/Product/:id" element={<ProductPage />} />
           <Route path="*" element={<Error />} />
         </Routes>
       </div>

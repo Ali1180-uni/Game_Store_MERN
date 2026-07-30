@@ -23,7 +23,7 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 h-20 w-full flex items-center justify-between px-6 md:px-10 bg-white dark:bg-neutral-950 border-b border-gray-100 dark:border-neutral-800">
       <NavLink
-        to="/GameVault"
+        to="/"
         className="flex items-center gap-2 text-lg font-bold text-black dark:text-white shrink-0"
       >
         <img src={img} alt="GameVault Logo" className="w-8 h-8" />

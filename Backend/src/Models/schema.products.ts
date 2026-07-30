@@ -6,7 +6,7 @@ export enum ProductCategory {
 }
 
 export interface IProduct {
-  name: string;
+  title: string;
   description: string;
   image: string;
   price: number;
@@ -25,7 +25,7 @@ export interface IProduct {
 }
 
 const productSchema = new Schema<IProduct>({
-  name: {
+  title: {
     type: String,
     required: true,
   },
