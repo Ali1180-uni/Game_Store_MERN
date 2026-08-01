@@ -1,15 +1,14 @@
 import { AnimatePresence, motion } from "framer-motion";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import RemoveShoppingCartIcon from '@mui/icons-material/RemoveShoppingCart';
-import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
-import RemoveIcon from '@mui/icons-material/Remove';
+import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
+import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "../Redux/hook";
-import { useAppDispatch } from "../Redux/hook";
-import { clearCart, removeItem } from "../Redux/CartSlice/cartSlice";
+import { useAppSelector, useAppDispatch } from "../Redux/hook";
+import { clearCart } from "../Redux/CartSlice/cartSlice";
 
 const CartBar = () => {
-  const count = useAppSelector((state) => state.cart.count);
+  const items = useAppSelector((state) => state.cart.items);
+  const count = Object.values(items).reduce((sum, qty) => sum + qty, 0);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -34,22 +33,16 @@ const CartBar = () => {
               {count} item{count !== 1 ? "s" : ""} in cart
             </span>
             <button
-              onClick={() => dispatch(removeItem())}
-              className="rounded-full bg-red-600 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-red-700"
-            >
-             <RemoveIcon /> Remove Item
-            </button>
-            <button
               onClick={() => dispatch(clearCart())}
-              className="rounded-full bg-red-600 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-red-700"
+              className="flex items-center gap-1.5 rounded-full bg-red-600/90 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-red-700"
             >
-            <RemoveShoppingCartIcon /> Clear Cart
+              <RemoveShoppingCartIcon fontSize="small" /> Clear Cart
             </button>
             <button
               onClick={() => navigate("/cart")}
-              className="rounded-full bg-violet-600 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-violet-700"
+              className="flex items-center gap-1.5 rounded-full bg-violet-600 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-violet-700"
             >
-              <ShoppingBagIcon />  View Cart
+              <ShoppingBagIcon fontSize="small" /> View Cart
             </button>
           </div>
         </motion.div>

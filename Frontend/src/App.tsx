@@ -12,6 +12,7 @@ import ProductPage from "./components/ProductPage";
 import { Provider } from "react-redux";
 import { store } from "./Redux/store";
 import CartBar from "./components/CartBar";
+import Cart from "./components/Cart";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/Accessories" element={<Accessories />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/cart" element={<Cart />} />
           <Route path="/Product/:id" element={<ProductPage />} />
           <Route path="*" element={<Error />} />
         </Routes>

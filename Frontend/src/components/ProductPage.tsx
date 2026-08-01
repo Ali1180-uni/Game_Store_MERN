@@ -7,6 +7,8 @@ import StarRating from "./Rating Stars/stars";
 import Review from "./Review";
 import { useAppDispatch } from "../Redux/hook";
 import { addItem } from "../Redux/CartSlice/cartSlice";
+import { useAppSelector } from "../Redux/hook";
+import { nanoid } from "nanoid";
 
 type ReviewEntry = {
   id: string;
@@ -28,6 +30,11 @@ const ProductPage = () => {
   const product =
     games.find((g) => String(g.id) === id) ||
     accessories.find((a) => String(a.id) === id);
+    
+  const qtyInCart = useAppSelector((state) =>
+    product ? state.cart.items[String(product.id)] ?? 0 : 0,
+  );
+  const atMax = qtyInCart >= 5;
 
   const [reviews, setReviews] = useState<ReviewEntry[]>([
     { id: "seed-1", user: "Ali", rating: 3, comment: "Great product!" },
@@ -43,7 +50,7 @@ const ProductPage = () => {
 
   const onSubmit = (data: ReviewFormData) => {
     const newReview: ReviewEntry = {
-      id: crypto.randomUUID(),
+      id: nanoid(),
       user: "You", // replace with the authenticated user from your session
       rating: data.rating,
       comment: data.comment.trim().slice(0, MAX_COMMENT_LENGTH),
@@ -110,16 +117,16 @@ const ProductPage = () => {
               Buy Now
             </button>
             <button
-              onClick={() => dispatch(addItem())}
-              className="flex-1 rounded-lg border border-neutral-700 bg-neutral-900 py-3.5 text-sm font-semibold text-white transition-colors hover:border-violet-500/50 hover:bg-neutral-800 sm:px-8"
+              onClick={() => dispatch(addItem(String(product.id)))}
+              disabled={atMax}
+              className="flex-1 rounded-lg border border-neutral-700 bg-neutral-900 py-3.5 text-sm font-semibold text-white transition-colors hover:border-violet-500/50 hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-40 sm:px-8"
             >
-              Add to Cart
+              {atMax ? "Max Quantity Reached" : "Add to Cart"}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Reviews */}
       <div className="border-t border-neutral-800 px-6 py-14 sm:px-10 md:px-16">
         <h2 className="text-xl font-semibold text-white">Customer Reviews</h2>
 

@@ -1,28 +1,42 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+
+const MAX_QTY_PER_ITEM = 5;
 
 type CartState = {
-  count: number;
+  items: Record<string, number>; // productId -> quantity
 };
 
 const initialState: CartState = {
-  count: 0,
+  items: {},
 };
 
 const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    addItem: (state) => {
-      state.count += 1; // RTK uses Immer under the hood — this "mutation" is safe, it's not really mutating
+    addItem: (state, action: PayloadAction<string>) => {
+      const id = action.payload;
+      const current = state.items[id] ?? 0;
+      if (current < MAX_QTY_PER_ITEM) {
+        state.items[id] = current + 1; // same Immer "mutation is safe" pattern as before
+      }
     },
-    removeItem: (state) => {
-      state.count = Math.max(0, state.count - 1);
+    removeItem: (state, action: PayloadAction<string>) => {
+      const id = action.payload;
+      if (state.items[id] > 1) {
+        state.items[id] -= 1;
+      } else {
+        delete state.items[id];
+      }
+    },
+    deleteItem: (state, action: PayloadAction<string>) => {
+      delete state.items[action.payload];
     },
     clearCart: (state) => {
-      state.count = 0;
+      state.items = {};
     },
   },
 });
 
-export const { addItem, removeItem, clearCart } = cartSlice.actions;
+export const { addItem, removeItem, deleteItem, clearCart } = cartSlice.actions;
 export default cartSlice.reducer;
