@@ -1,4 +1,6 @@
-import mongoose, { Mongoose } from "mongoose";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+dotenv.config();
 
 const connectDB = async (): Promise<void> => {
   try {
@@ -10,9 +12,15 @@ const connectDB = async (): Promise<void> => {
       );
     }
 
-    const conn: Mongoose = await mongoose.connect(mongoUri);
-
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
+    await mongoose
+      .connect(mongoUri)
+      .then(() => {
+        console.log("Connected to MongoDB");
+      })
+      .catch((err: Error) => {
+        console.error("Error connecting to MongoDB:", err);
+        process.exit(1);
+      });
   } catch (err) {
     console.error("Error connecting to MongoDB:", err);
     process.exit(1); // Exit the process with failure

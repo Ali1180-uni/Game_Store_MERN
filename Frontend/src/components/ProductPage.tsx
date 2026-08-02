@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
-import games from "../../public/images/Games/data.json";
-import accessories from "../../public/images/Accessories/data.json";
+import { nanoid } from "nanoid";
 import StarRating from "./Rating Stars/stars";
 import Review from "./Review";
-import { useAppDispatch } from "../Redux/hook";
+import { useAppDispatch, useAppSelector } from "../Redux/hook";
 import { addItem } from "../Redux/CartSlice/cartSlice";
-import { useAppSelector } from "../Redux/hook";
-import { nanoid } from "nanoid";
+import { useQuery } from "@tanstack/react-query";
+import { fetchProductById } from "../Api/api";
 
 type ReviewEntry = {
   id: string;
@@ -27,12 +26,19 @@ const MAX_COMMENT_LENGTH = 500;
 const ProductPage = () => {
   const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
-  const product =
-    games.find((g) => String(g.id) === id) ||
-    accessories.find((a) => String(a.id) === id);
-    
+
+  const {
+    data: product,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["product", id],
+    queryFn: () => fetchProductById(id!),
+    enabled: !!id,
+  });
+
   const qtyInCart = useAppSelector((state) =>
-    product ? state.cart.items[String(product.id)] ?? 0 : 0,
+    product ? state.cart.items[product._id] ?? 0 : 0
   );
   const atMax = qtyInCart >= 5;
 
@@ -59,7 +65,15 @@ const ProductPage = () => {
     reset();
   };
 
-  if (!product) {
+  if (isLoading) {
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center">
+        <p className="text-sm text-neutral-400">Loading...</p>
+      </div>
+    );
+  }
+
+  if (isError || !product) {
     return (
       <div className="mx-auto max-w-lg px-4 py-24 text-center">
         <h1 className="text-xl font-semibold text-white">Product not found</h1>
@@ -83,7 +97,6 @@ const ProductPage = () => {
 
   return (
     <div className="w-full">
-      {/* Product — full-bleed, image flush to viewport's left edge */}
       <div className="grid grid-cols-1 md:grid-cols-2">
         <div className="flex items-center justify-center overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-900 p-8">
           <img
@@ -117,7 +130,7 @@ const ProductPage = () => {
               Buy Now
             </button>
             <button
-              onClick={() => dispatch(addItem(String(product.id)))}
+              onClick={() => dispatch(addItem(product._id))}
               disabled={atMax}
               className="flex-1 rounded-lg border border-neutral-700 bg-neutral-900 py-3.5 text-sm font-semibold text-white transition-colors hover:border-violet-500/50 hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-40 sm:px-8"
             >
