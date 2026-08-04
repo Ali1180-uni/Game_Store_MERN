@@ -3,28 +3,38 @@ import img from "../../public/images/poster.jpg";
 import ShowCase from "./ShowCase";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { useRef } from "react";
-import Games from "../../public/images/Games/data.json";
-import Accesssories from "../../public/images/Accessories/data.json";
+import { useQuery } from "@tanstack/react-query";
+import { fetchProducts } from "../Api/api";
 
 const Home = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
 
-const { scrollYProgress } = useScroll({
-  target: sectionRef,
-  offset: ["start 90%", "start 35%"],
-});
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start 90%", "start 35%"],
+  });
 
-const smooth = useSpring(scrollYProgress, {
-  stiffness: 100,
-  damping: 20,
-});
+  const smooth = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 20,
+  });
 
-const textX = useTransform(smooth, [0, 1], [-80, 0]);
-const imageX = useTransform(smooth, [0, 1], [80, 0]);
-const textY = useTransform(smooth, [0, 1], [20, 0]);
-const imageY = useTransform(smooth, [0, 1], [20, 0]);
-const opacity = useTransform(smooth, [0, 0.3], [0, 1]);
-const scale = useTransform(smooth, [0, 1], [0.98, 1]);
+  const textX = useTransform(smooth, [0, 1], [-80, 0]);
+  const imageX = useTransform(smooth, [0, 1], [80, 0]);
+  const textY = useTransform(smooth, [0, 1], [20, 0]);
+  const imageY = useTransform(smooth, [0, 1], [20, 0]);
+  const opacity = useTransform(smooth, [0, 0.3], [0, 1]);
+  const scale = useTransform(smooth, [0, 1], [0.98, 1]);
+
+  const { data: games = [], isLoading: gamesLoading } = useQuery({
+    queryKey: ["products", "Game"],
+    queryFn: () => fetchProducts("Game"),
+  });
+
+  const { data: accessories = [], isLoading: accessoriesLoading } = useQuery({
+    queryKey: ["products", "Accessory"],
+    queryFn: () => fetchProducts("Accessory"),
+  });
 
   return (
     <div className="bg-neutral-950">
@@ -35,12 +45,7 @@ const scale = useTransform(smooth, [0, 1], [0.98, 1]);
         <div className="pointer-events-none absolute -bottom-40 right-0 h-96 w-96 rounded-full bg-purple-500/10 blur-[120px]" />
         <div className="relative container mx-auto grid grid-cols-1 items-center gap-12 px-6 md:grid-cols-2 md:px-10">
           <motion.div
-            style={{
-              x: textX,
-              y: textY,
-              opacity,
-              scale,
-            }}
+            style={{ x: textX, y: textY, opacity, scale }}
             className="text-left"
           >
             <p className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-blue-400">
@@ -63,14 +68,8 @@ const scale = useTransform(smooth, [0, 1], [0.98, 1]);
             </p>
           </motion.div>
 
-          {/* Right Image */}
           <motion.div
-            style={{
-              x: imageX,
-              y: imageY,
-              opacity,
-              scale,
-            }}
+            style={{ x: imageX, y: imageY, opacity, scale }}
             className="flex justify-center md:justify-end"
           >
             <div className="relative overflow-hidden rounded-3xl border border-neutral-800 shadow-2xl">
@@ -79,14 +78,15 @@ const scale = useTransform(smooth, [0, 1], [0.98, 1]);
                 alt="Game Store"
                 className="h-auto w-full max-w-md object-cover"
               />
-
               <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent" />
             </div>
           </motion.div>
         </div>
       </section>
 
-      <ShowCase games={Games} accessories={Accesssories} />
+      {!gamesLoading && !accessoriesLoading && (
+        <ShowCase games={games} accessories={accessories} />
+      )}
     </div>
   );
 };

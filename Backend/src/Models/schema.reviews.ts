@@ -12,7 +12,7 @@ export interface IReview {
 const reviewSchema = new Schema<IReview>({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "UserSchema",
+        ref: "User",
         required: true
     },
     product: {

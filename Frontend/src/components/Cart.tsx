@@ -4,24 +4,43 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import games from "../../public/images/Games/data.json";
-import accessories from "../../public/images/Accessories/data.json";
 import { useAppSelector, useAppDispatch } from "../Redux/hook";
 import { addItem, removeItem, deleteItem, clearCart } from "../Redux/CartSlice/cartSlice";
+import { useQuery } from "@tanstack/react-query";
+import { fetchProducts } from "../Api/api";
 
-const allProducts = [...games, ...accessories];
 
 const Cart = () => {
   const items = useAppSelector((state) => state.cart.items);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  const { data: games = [], isLoading: gamesLoading } = useQuery({
+    queryKey: ["products", "Game"],
+    queryFn: () => fetchProducts("Game"),
+  });
+
+  const { data: accessories = [], isLoading: accessoriesLoading } = useQuery({
+    queryKey: ["products", "Accessory"],
+    queryFn: () => fetchProducts("Accessory"),
+  });
+
+  const isLoading = gamesLoading || accessoriesLoading;
+
   const cartEntries = Object.entries(items)
     .map(([id, quantity]) => {
-      const product = allProducts.find((p) => String(p.id) === id);
+      const product = [...games, ...accessories].find((p) => String(p._id) === id);
       return product ? { ...product, quantity } : null;
     })
     .filter((entry): entry is NonNullable<typeof entry> => entry !== null);
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center">
+        <p className="text-sm text-neutral-400">Loading your cart...</p>
+      </div>
+    );
+  }
 
   if (cartEntries.length === 0) {
     return (
@@ -31,18 +50,20 @@ const Cart = () => {
         <p className="mt-2 text-sm text-neutral-400">
           Looks like you haven't added any games yet.
         </p>
-        <NavLink
-          to="/Games"
-          className="mt-6 rounded-lg bg-violet-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-violet-700"
-        >
-          Browse Games
-        </NavLink>
-        <NavLink
-          to="/Accessories"
-          className="mt-6 rounded-lg bg-violet-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-violet-700"
-        >
-          Browse Accessories
-        </NavLink>
+        <div className="mt-6 flex gap-3">
+          <NavLink
+            to="/Games"
+            className="rounded-lg bg-violet-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-violet-700"
+          >
+            Browse Games
+          </NavLink>
+          <NavLink
+            to="/Accessories"
+            className="rounded-lg border border-neutral-700 px-5 py-2.5 text-sm font-medium text-neutral-300 transition-colors hover:bg-neutral-800"
+          >
+            Browse Accessories
+          </NavLink>
+        </div>
       </div>
     );
   }
@@ -62,9 +83,9 @@ const Cart = () => {
 
         <div className="divide-y divide-neutral-800 rounded-2xl border border-neutral-800 bg-neutral-900">
           {cartEntries.map((item) => (
-            <div key={item.id} className="flex items-center gap-4 p-4">
+            <div key={item._id} className="flex items-center gap-4 p-4">
               <button
-                onClick={() => dispatch(deleteItem(String(item.id)))}
+                onClick={() => dispatch(deleteItem(String(item._id)))}
                 aria-label={`Remove ${item.title} from cart`}
                 className="text-neutral-500 transition-colors hover:text-red-500"
               >
@@ -80,7 +101,7 @@ const Cart = () => {
 
               <div className="flex items-center gap-2 rounded-full border border-neutral-700 px-2 py-1">
                 <button
-                  onClick={() => dispatch(removeItem(String(item.id)))}
+                  onClick={() => dispatch(removeItem(String(item._id)))}
                   disabled={item.quantity <= 1}
                   aria-label="Decrease quantity"
                   className="flex h-6 w-6 items-center justify-center rounded-full text-neutral-300 transition-colors hover:bg-neutral-800 disabled:opacity-30"
@@ -89,7 +110,7 @@ const Cart = () => {
                 </button>
                 <span className="w-5 text-center text-sm text-white">{item.quantity}</span>
                 <button
-                  onClick={() => dispatch(addItem(String(item.id)))}
+                  onClick={() => dispatch(addItem(String(item._id)))}
                   disabled={item.quantity >= 5}
                   aria-label="Increase quantity"
                   className="flex h-6 w-6 items-center justify-center rounded-full text-neutral-300 transition-colors hover:bg-neutral-800 disabled:opacity-30"
