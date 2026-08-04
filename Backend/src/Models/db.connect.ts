@@ -12,15 +12,7 @@ const connectDB = async (): Promise<void> => {
       );
     }
 
-    await mongoose
-      .connect(mongoUri)
-      .then(() => {
-        console.log("Connected to MongoDB");
-      })
-      .catch((err: Error) => {
-        console.error("Error connecting to MongoDB:", err);
-        process.exit(1);
-      });
+    await mongoose.connect(mongoUri);
   } catch (err) {
     console.error("Error connecting to MongoDB:", err);
     process.exit(1); // Exit the process with failure

@@ -3,6 +3,8 @@ import express from "express";
 import cors from "cors";
 import type { Express } from "express";
 import productRoutes from "./Routes/product.routes.ts";
+import AuthRoutes from "./Routes/Auth.routes.ts";
+import ReviewsRoutes from "./Routes/Reviews.routes.ts";
 
 dotenv.config();
 
@@ -21,7 +23,8 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use("/products", productRoutes);
-
+app.use("/reviews", ReviewsRoutes);
+app.use("/auth", AuthRoutes);
 
 app.listen(port, (): void => {
   console.log(`Backend running on port ${port}`);

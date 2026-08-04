@@ -13,6 +13,7 @@ import { Provider } from "react-redux";
 import { store } from "./Redux/store";
 import CartBar from "./components/CartBar";
 import Cart from "./components/Cart";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
@@ -33,6 +34,16 @@ function App() {
       </div>
       <CartBar />
       <Footer />
+      <Toaster
+        position="bottom-right"
+        toastOptions={{
+          style: {
+            background: "#171717", // neutral-900
+            color: "#fff",
+            border: "1px solid #404040", // neutral-700
+          },
+        }}
+      />
     </Provider>
   );
 }

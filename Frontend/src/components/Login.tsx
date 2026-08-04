@@ -1,21 +1,43 @@
 import { useForm } from "react-hook-form";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import toast from "react-hot-toast";
+import { useMutation } from "@tanstack/react-query";
+import { loginUser } from "../Api/api";
+import { useAppDispatch } from "../Redux/hook";
+import { setCredentials } from "../Redux/AuthSlice/AuthSlice";
+
 
 type FormData = {
   email: string;
   password: string;
 };
 
+
 const Login = () => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>();
 
+const loginMutation = useMutation({
+  mutationFn: loginUser,
+  onSuccess: (data) => {
+    dispatch(setCredentials(data.token));
+    toast.success("Welcome back!");
+    navigate("/");
+  },
+  onError: () => {
+    toast.error("Login failed. Check your email and password.");
+  },
+});
+
   const onSubmit = (data: FormData) => {
-    console.log(data);
+    loginMutation.mutate(data);
   };
 
   return (
@@ -99,14 +121,21 @@ const Login = () => {
               )}
             </div>
 
+            {loginMutation.isError && (
+              <p className="text-sm text-red-600">
+                Login failed. Check your email and password.
+              </p>
+            )}
+
             <button
               type="submit"
+              disabled={loginMutation.isPending}
               className="w-full rounded-lg bg-black py-2.5 text-sm font-medium text-white
                      transition-colors hover:bg-violet-600
                      focus:outline-none focus:ring-2 focus:ring-violet-500/50
                      disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Log in
+              {loginMutation.isPending ? "Logging in..." : "Log in"}
             </button>
           </form>
 

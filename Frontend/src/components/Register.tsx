@@ -1,22 +1,39 @@
 import { useForm } from "react-hook-form";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { useMutation } from "@tanstack/react-query";
+import { registerUser } from "../Api/api";
+import toast from "react-hot-toast";
 
 type FormData = {
-  Name: string;
+  name: string;
   email: string;
   password: string;
 };
 
 const Register = () => {
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>();
 
+const registerMutation = useMutation({
+  mutationFn: registerUser,
+  onSuccess: () => {
+    toast.success("Account created!");
+    navigate("/login");
+  },
+  onError: () => {
+    const message = "Registration failed. Please try again.";
+    toast.error(message);
+  },
+});
+
   const onSubmit = (data: FormData) => {
-    console.log(data);
+    registerMutation.mutate(data);
   };
 
   return (
@@ -52,8 +69,8 @@ const Register = () => {
                 Name
               </label>
               <input
-                id="Name"
-                {...register("Name", {
+                id="name"
+                {...register("name", {
                   required: "Name is required",
                   minLength: {
                     value: 2,
@@ -66,9 +83,9 @@ const Register = () => {
                  hover:border-slate-400
                  focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500/30"
               />
-              {errors.Name && (
+              {errors.name && (
                 <p className="mt-1.5 text-sm text-red-600">
-                  {errors.Name.message}
+                  {errors.name.message}
                 </p>
               )}
             </div>
@@ -132,14 +149,21 @@ const Register = () => {
               )}
             </div>
 
+            {registerMutation.isError && (
+              <p className="text-sm text-red-600">
+                Registration failed. That email might already be in use.
+              </p>
+            )}
+
             <button
               type="submit"
+              disabled={registerMutation.isPending}
               className="w-full rounded-lg bg-black py-2.5 text-sm font-medium text-white
                transition-colors hover:bg-violet-600
                focus:outline-none focus:ring-2 focus:ring-violet-500/50
                disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Register
+              {registerMutation.isPending ? "Creating account..." : "Register"}
             </button>
           </form>
 

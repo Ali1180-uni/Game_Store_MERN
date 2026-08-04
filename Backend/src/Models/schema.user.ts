@@ -11,7 +11,7 @@ export enum userBan {
   NOBAN = "No Ban",
 }
 
-export interface IUser {
+export interface IUser extends mongoose.Document {
   name: string;
   email: string;
   password: string;
@@ -53,6 +53,6 @@ const userSchema = new Schema<IUser>(
   { timestamps: true, strict: true }
 );
 
-const User: Model<IUser> = mongoose.model<IUser>("UserSchema", userSchema);
+const User: Model<IUser> = mongoose.model<IUser>("User", userSchema);
 
-export { User };
+export { User, userSchema };
