@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
@@ -7,16 +7,16 @@ import { loginUser } from "../Api/api";
 import { useAppDispatch } from "../Redux/hook";
 import { setCredentials } from "../Redux/AuthSlice/AuthSlice";
 
-
 type FormData = {
   email: string;
   password: string;
 };
 
-
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useAppDispatch();
+  const from = (location.state as { from?: string })?.from ?? "/";
 
   const {
     register,
@@ -24,17 +24,18 @@ const Login = () => {
     formState: { errors },
   } = useForm<FormData>();
 
-const loginMutation = useMutation({
-  mutationFn: loginUser,
-  onSuccess: (data) => {
-    dispatch(setCredentials(data.token));
-    toast.success("Welcome back!");
-    navigate("/");
-  },
-  onError: () => {
-    toast.error("Login failed. Check your email and password.");
-  },
-});
+  const loginMutation = useMutation({
+    mutationFn: loginUser,
+    onSuccess: (data) => {
+      dispatch(setCredentials({ token: data.token, user: data.user }));
+      toast.success("Welcome back!");
+      navigate(from, { replace: true });
+    },
+    onError: () => {
+      const message = "Login failed. Check your email and password.";
+      toast.error(message);
+    },
+  });
 
   const onSubmit = (data: FormData) => {
     loginMutation.mutate(data);

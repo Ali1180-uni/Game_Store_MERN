@@ -3,7 +3,8 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import img from "../../public/images/Title icon.png";
 import { useAppSelector, useAppDispatch } from "../Redux/hook";
-import { logout } from "../Redux/AuthSlice/AuthSlice.ts";
+import { logout } from "../Redux/AuthSlice/AuthSlice";
+import ProfileDropdown from "./ProfileDropDown.tsx";
 import toast from "react-hot-toast";
 
 interface NavItem {
@@ -24,6 +25,7 @@ const Navbar = () => {
   const dispatch = useAppDispatch();
   const [menuOpen, setMenuOpen] = useState(false);
   const token = useAppSelector((state) => state.auth.token);
+  const user = useAppSelector((state) => state.auth.user);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -35,13 +37,14 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 h-20 w-full flex items-center justify-between px-6 md:px-10 bg-white dark:bg-neutral-950 border-b border-gray-100 dark:border-neutral-800">
       <NavLink
-        to="/"
+        to="/GameVault"
         className="flex items-center gap-2 text-lg font-bold text-black dark:text-white shrink-0"
       >
         <img src={img} alt="GameVault Logo" className="w-8 h-8" />
         GameVault
       </NavLink>
 
+      {/* Desktop */}
       <div className="hidden md:flex items-center gap-8 ml-auto">
         {navItems.map((item) => {
           const isActive = location.pathname === item.path;
@@ -61,12 +64,7 @@ const Navbar = () => {
         })}
 
         {token ? (
-          <button
-            onClick={handleLogout}
-            className="text-sm font-medium text-gray-500 transition-colors hover:text-black dark:text-neutral-400 dark:hover:text-white"
-          >
-            Logout
-          </button>
+          <ProfileDropdown />
         ) : (
           <NavLink
             to="/login"
@@ -89,6 +87,7 @@ const Navbar = () => {
         {menuOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
 
+      {/* Mobile */}
       {menuOpen && (
         <div className="absolute top-full left-0 w-full bg-white dark:bg-neutral-950 border-b border-gray-100 dark:border-neutral-800 flex flex-col gap-1 py-4 px-6 md:hidden z-50">
           {navItems.map((item) => {
@@ -109,13 +108,18 @@ const Navbar = () => {
             );
           })}
 
-          {token ? (
-            <button
-              onClick={handleLogout}
-              className="text-left text-sm font-medium py-2 text-gray-500 transition-colors hover:text-black dark:text-neutral-400 dark:hover:text-white"
-            >
-              Logout
-            </button>
+          {token && user ? (
+            <div className="mt-2 flex items-center justify-between border-t border-neutral-800 pt-3">
+              <span className="text-sm font-medium text-black dark:text-white">
+                {user.name}
+              </span>
+              <button
+                onClick={handleLogout}
+                className="text-sm font-medium text-red-500 transition-colors hover:text-red-400"
+              >
+                Logout
+              </button>
+            </div>
           ) : (
             <NavLink
               to="/login"

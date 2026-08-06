@@ -5,6 +5,8 @@ import type { Express } from "express";
 import productRoutes from "./Routes/product.routes.ts";
 import AuthRoutes from "./Routes/Auth.routes.ts";
 import ReviewsRoutes from "./Routes/Reviews.routes.ts";
+import addressRoutes from "./Routes/Address.routes.ts";
+import orderRoutes from "./Routes/order.routes.ts";
 
 dotenv.config();
 
@@ -24,6 +26,8 @@ app.use(cors(corsOptions));
 
 app.use("/products", productRoutes);
 app.use("/reviews", ReviewsRoutes);
+app.use("/addresses", addressRoutes);
+app.use("/orders", orderRoutes);
 app.use("/auth", AuthRoutes);
 
 app.listen(port, (): void => {

@@ -1,19 +1,20 @@
-import { NavLink, useNavigate } from "react-router-dom";
-import { nanoid } from "nanoid";
-import DeleteIcon from '@mui/icons-material/Delete';
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
+import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useAppSelector, useAppDispatch } from "../Redux/hook";
-import { addItem, removeItem, deleteItem, clearCart } from "../Redux/CartSlice/cartSlice";
+import { addItem, removeItem, deleteItem } from "../Redux/CartSlice/cartSlice";
 import { useQuery } from "@tanstack/react-query";
 import { fetchProducts } from "../Api/api";
-
+import { setCheckoutItems } from "../Redux/CheckoutSlice/CheckoutSlice";
 
 const Cart = () => {
   const items = useAppSelector((state) => state.cart.items);
+  const token = useAppSelector((state) => state.auth.token);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { data: games = [], isLoading: gamesLoading } = useQuery({
     queryKey: ["products", "Game"],
@@ -70,11 +71,26 @@ const Cart = () => {
 
   const subtotal = cartEntries.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
-  const handlePlaceOrder = () => {
-    const orderId = nanoid();
-    dispatch(clearCart());
-    navigate(`/order/${orderId}`);
-  };
+const handlePlaceOrder = () => {
+  if (!token) {
+    navigate("/login", { state: { from: location.pathname } });
+    return;
+  }
+
+  dispatch(
+    setCheckoutItems(
+      cartEntries.map((item) => ({
+        productId: item._id,
+        title: item.title,
+        image: item.image,
+        price: item.price,
+        quantity: item.quantity,
+      }))
+    )
+  );
+
+  navigate("/checkout");
+};
 
   return (
     <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 px-4 py-10 lg:grid-cols-[1fr_360px]">

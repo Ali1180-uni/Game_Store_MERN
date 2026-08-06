@@ -87,3 +87,52 @@ export const submitReview = async (data: ReviewPayload) => {
     throw error;
   }
 };
+
+
+export type Address = {
+  _id: string;
+  fullname: string;
+  phone: string;
+  province: string;
+  city: string;
+  street: string;
+};
+
+export type CreateOrderPayload = {
+  items: { product: string; quantity: number }[];
+  shippingAddress: string;
+  paymentMethod: "jazzCash" | "card" | "cashOnDelivery";
+};
+
+export const fetchAddresses = async (): Promise<Address[]> => {
+  const token = localStorage.getItem("token");
+  const response = await api.get("/addresses", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const addAddress = async (data: Omit<Address, "_id">): Promise<Address> => {
+  const token = localStorage.getItem("token");
+  const response = await api.post("/addresses", data, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+
+export const createOrderApi = async (data: CreateOrderPayload) => {
+  const token = localStorage.getItem("token");
+  const response = await api.post("/orders", data, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const fetchOrder = async (id: string) => {
+  const token = localStorage.getItem("token");
+  const response = await api.get(`/orders/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};

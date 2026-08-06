@@ -2,6 +2,7 @@ import mongoose, { Schema, Model } from "mongoose";
 
 export enum paymentMethod {
     JAZZCASH = "jazzCash",
+    CARD = "card",
     CASHONDELIVERY = "cashOnDelivery",
 }
 
@@ -36,7 +37,7 @@ export interface IOrder {
 const orderSchema = new Schema<IOrder>({
     customer: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "UserSchema",
+        ref: "User",
         required: true
     },
     items: [{
@@ -67,7 +68,7 @@ const orderSchema = new Schema<IOrder>({
     },
     shippingAddress: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "AddressSchema",
+        ref: "Address",
         required: true
     },
     shippingCost: {

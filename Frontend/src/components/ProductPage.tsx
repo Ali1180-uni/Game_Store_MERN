@@ -1,4 +1,4 @@
-import { useParams, NavLink } from "react-router-dom";
+import { useParams, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import StarRating from "./Rating Stars/stars";
 import Review from "./Review";
@@ -7,6 +7,7 @@ import { addItem } from "../Redux/CartSlice/cartSlice";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchProductById, fetchReviews, submitReview } from "../Api/api";
 import toast from "react-hot-toast";
+import { setCheckoutItems } from "../Redux/CheckoutSlice/CheckoutSlice";
 
 type ReviewFormData = {
   rating: number;
@@ -21,8 +22,6 @@ type Product = {
   price: number;
 };
 
-// Matches the actual shape returned by GET /reviews/:productId —
-// flat rating/comment on the review doc, populated user with a lowercase `name` field.
 type ReviewDoc = {
   _id: string;
   user: { _id: string; name: string } | null;
@@ -39,6 +38,8 @@ const ProductPage = () => {
   const token = useAppSelector((state) => state.auth.token);
   const { id } = useParams<{ id: string }>();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const {
     data: product,
@@ -49,6 +50,28 @@ const ProductPage = () => {
     queryFn: () => fetchProductById(id!),
     enabled: !!id,
   });
+  const handleBuyNow = () => {
+    if (!product) return;
+
+    if (!token) {
+      navigate("/login", { state: { from: location.pathname } });
+      return;
+    }
+
+    dispatch(
+      setCheckoutItems([
+        {
+          productId: product._id,
+          title: product.title,
+          image: product.image,
+          price: product.price,
+          quantity: 1,
+        },
+      ]),
+    );
+
+    navigate("/checkout");
+  };
 
   const qtyInCart = useAppSelector((state) =>
     product ? (state.cart.items[product._id] ?? 0) : 0,
@@ -150,7 +173,10 @@ const ProductPage = () => {
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <button className="flex-1 rounded-lg bg-violet-600 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-violet-700 sm:px-8">
+            <button
+              onClick={handleBuyNow}
+              className="flex-1 rounded-lg bg-violet-600 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-violet-700 sm:px-8"
+            >
               Buy Now
             </button>
             <button
