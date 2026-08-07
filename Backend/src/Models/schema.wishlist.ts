@@ -12,7 +12,7 @@ export interface IWishlist {
 const wishlistSchema = new Schema<IWishlist>({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "UserSchema",
+    ref: "User",
     required: true,
   },
   items: [

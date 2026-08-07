@@ -18,6 +18,7 @@ export interface IUser extends mongoose.Document {
   role: userRole;
   accountStatus: userBan;
   addresses: mongoose.Types.ObjectId[];
+  notifications: mongoose.Types.ObjectId[];
 }
 
 const userSchema = new Schema<IUser>(
@@ -38,15 +39,25 @@ const userSchema = new Schema<IUser>(
     role: {
       type: String,
       enum: Object.values(userRole),
+      default: userRole.CUSTOMER,
+      required: true,
     },
     accountStatus: {
       type: String,
       enum: Object.values(userBan),
+      default: userBan.NOBAN,
+      required: true,
     },
     addresses: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "AddressSchema",
+        ref: "Address",
+      },
+    ],
+    notifications: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Notification",
       },
     ],
   },

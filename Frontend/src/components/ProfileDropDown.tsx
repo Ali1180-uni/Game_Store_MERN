@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, LogOut } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../Redux/hook";
 import { logout } from "../Redux/AuthSlice/AuthSlice.ts";
+import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
@@ -12,6 +13,7 @@ const ProfileDropdown = () => {
   const user = useAppSelector((state) => state.auth.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -25,8 +27,8 @@ const ProfileDropdown = () => {
 
   const handleLogout = () => {
     dispatch(logout());
+    queryClient.clear(); // wipes ALL cached queries — notifications, cart-adjacent product data, everything tied to this session
     toast.success("Logged out");
-    setOpen(false);
     navigate("/");
   };
 

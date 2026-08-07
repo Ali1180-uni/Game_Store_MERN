@@ -19,7 +19,7 @@ const orderChatSchema = new Schema<IOrderChat>({
     message: [{
         sender: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "UserSchema",
+            ref: "User",
             required: true
         },
         content: {

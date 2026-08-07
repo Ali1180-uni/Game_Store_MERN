@@ -17,6 +17,39 @@ type ReviewPayload = {
   comment: string;
 };
 
+export type Address = {
+  _id: string;
+  fullname: string;
+  phone: string;
+  province: string;
+  city: string;
+  street: string;
+};
+
+export type Notification = {
+  _id: string;
+  title: string;
+  purpose: "Order" | "Payment" | "Ban" | "Account" | "Admin";
+  message: string;
+  isRead: boolean;
+  createdAt: string;
+};
+
+export type AdminUser = {
+  _id: string;
+  name: string;
+  email: string;
+  role: string;
+  accountStatus: string;
+};
+
+export type AdminStats = {
+  userCount: number;
+  productCount: number;
+  orderCount: number;
+  reviewCount: number;
+};
+
 export const api = axios.create({
   baseURL: "http://localhost:5000",
   withCredentials: true,
@@ -89,14 +122,6 @@ export const submitReview = async (data: ReviewPayload) => {
 };
 
 
-export type Address = {
-  _id: string;
-  fullname: string;
-  phone: string;
-  province: string;
-  city: string;
-  street: string;
-};
 
 export type CreateOrderPayload = {
   items: { product: string; quantity: number }[];
@@ -132,6 +157,53 @@ export const createOrderApi = async (data: CreateOrderPayload) => {
 export const fetchOrder = async (id: string) => {
   const token = localStorage.getItem("token");
   const response = await api.get(`/orders/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const fetchNotifications = async (): Promise<Notification[]> => {
+  const token = localStorage.getItem("token");
+  const response = await api.get("/notifications", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const markNotificationRead = async (id: string) => {
+  const token = localStorage.getItem("token");
+  const response = await api.patch(
+    `/notifications/${id}/read`,
+    {},
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  return response.data;
+};
+
+
+export const fetchAllUsers = async (): Promise<AdminUser[]> => {
+  const token = localStorage.getItem("token");
+  const response = await api.get("/admin/users", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const sendAdminNotification = async (data: {
+  userId: string;
+  title: string;
+  message: string;
+}) => {
+  const token = localStorage.getItem("token");
+  const response = await api.post("/admin/notifications", data, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const fetchAdminStats = async (): Promise<AdminStats> => {
+  const token = localStorage.getItem("token");
+  const response = await api.get("/admin/stats", {
     headers: { Authorization: `Bearer ${token}` },
   });
   return response.data;

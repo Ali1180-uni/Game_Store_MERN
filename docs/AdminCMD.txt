@@ -1,0 +1,4 @@
+db.users.updateOne(
+  { _id: ObjectId('UserID') },
+  { $set: { role: 'Admin' } }
+);

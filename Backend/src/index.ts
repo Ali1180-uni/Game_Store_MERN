@@ -7,6 +7,8 @@ import AuthRoutes from "./Routes/Auth.routes.ts";
 import ReviewsRoutes from "./Routes/Reviews.routes.ts";
 import addressRoutes from "./Routes/Address.routes.ts";
 import orderRoutes from "./Routes/order.routes.ts";
+import notificationRoutes from "./Routes/Notification.routes.ts";
+import adminRoutes from "./Routes/Admin.routtes.ts";
 
 dotenv.config();
 
@@ -17,7 +19,7 @@ app.use(express.json());
 
 const corsOptions = {
   origin: 'http://localhost:5173',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 };
@@ -28,6 +30,8 @@ app.use("/products", productRoutes);
 app.use("/reviews", ReviewsRoutes);
 app.use("/addresses", addressRoutes);
 app.use("/orders", orderRoutes);
+app.use("/notifications", notificationRoutes);
+app.use("/admin", adminRoutes);
 app.use("/auth", AuthRoutes);
 
 app.listen(port, (): void => {

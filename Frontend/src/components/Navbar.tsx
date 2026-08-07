@@ -6,6 +6,7 @@ import { useAppSelector, useAppDispatch } from "../Redux/hook";
 import { logout } from "../Redux/AuthSlice/AuthSlice";
 import ProfileDropdown from "./ProfileDropDown.tsx";
 import toast from "react-hot-toast";
+import NotificationBell from "./NotificationBell.tsx";
 
 interface NavItem {
   label: string;
@@ -62,7 +63,7 @@ const Navbar = () => {
             </NavLink>
           );
         })}
-
+        {token && <NotificationBell />}
         {token ? (
           <ProfileDropdown />
         ) : (

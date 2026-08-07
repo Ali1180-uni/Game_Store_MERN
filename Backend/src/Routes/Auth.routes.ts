@@ -3,6 +3,8 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { User } from "../Models/schema.user.ts";
+import { notifyUser } from "../utils/Notification/notify.ts";
+import { NotificationPurpose } from "../Models/schema.notification.ts";
 
 const router = express.Router();
 
@@ -25,9 +27,15 @@ if (!JWT_SECRET) {
 router.post("/register", async (req: Request, res: Response) => {
   try {
     const { name, email, password } = req.body as RegisterData;
-
     const hashedPassword = await bcrypt.hash(password, 10);
-    await User.create({ name, email, password: hashedPassword });
+    const user = await User.create({ name, email, password: hashedPassword });
+
+    await notifyUser(
+      user._id,
+      NotificationPurpose.ACCOUNT,
+      "Welcome to GameVault!",
+      `Hi ${name}, your account has been created successfully.`
+    );
 
     res.status(201).json({ message: "User created successfully" });
   } catch (err: any) {
@@ -41,7 +49,6 @@ router.post("/register", async (req: Request, res: Response) => {
 router.post("/login", async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body as LoginData;
-
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(401).json({ message: "Invalid email or password" });
@@ -50,6 +57,12 @@ router.post("/login", async (req: Request, res: Response) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    if (user.accountStatus === "Ban") {
+      return res
+        .status(403)
+        .json({ message: "This account has been suspended." });
     }
 
     const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "7d" });
@@ -61,6 +74,8 @@ router.post("/login", async (req: Request, res: Response) => {
         id: user._id,
         name: user.name,
         email: user.email,
+        role: user.role,
+        accountStatus: user.accountStatus,
       },
     });
   } catch (err) {

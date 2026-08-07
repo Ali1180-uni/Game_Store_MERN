@@ -1,8 +1,15 @@
 import express from "express";
 import { Request, Response } from "express";
-import { Order, paymentMethod as PaymentMethodEnum, paymentStatus as PaymentStatusEnum, orderStatus as OrderStatusEnum } from "../Models/schema.order.ts";
+import {
+  Order,
+  paymentMethod as PaymentMethodEnum,
+  paymentStatus as PaymentStatusEnum,
+  orderStatus as OrderStatusEnum,
+} from "../Models/schema.order.ts";
 import { Product } from "../Models/schema.products.ts";
 import { protect } from "../Middleware/auth.middlewares.ts";
+import { notifyUser } from "../utils/Notification/notify.ts";
+import { NotificationPurpose } from "../Models/schema.notification.ts";
 
 const router = express.Router();
 const SHIPPING_COST = 0;
@@ -45,6 +52,13 @@ router.post("/", protect, async (req: Request, res: Response) => {
       shippingCost: SHIPPING_COST,
       totalAmount,
     });
+
+    await notifyUser(
+      req.user._id,
+      NotificationPurpose.ORDER,
+      "Order Placed",
+      `Your order #${order._id} has been placed successfully. Total: $${totalAmount.toFixed(2)}.`
+    );
 
     const populated = await Order.findById(order._id)
       .populate("items.product")
