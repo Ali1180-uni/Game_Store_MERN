@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
@@ -49,6 +49,7 @@ type ProductFormValues = {
 
 const EditProduct = () => {
   const queryClient = useQueryClient();
+  const [categoryFilter, setCategoryFilter] = useState<"" | "Game" | "Accessories">("");
   const [editingProduct, setEditingProduct] = useState<AdminProduct | null>(
     null,
   );
@@ -60,6 +61,14 @@ const EditProduct = () => {
     queryKey: ["admin", "products"],
     queryFn: fetchAdminProducts,
   });
+
+  const filteredProducts = useMemo(
+    () =>
+      categoryFilter
+        ? products.filter((product) => product.category === categoryFilter)
+        : products,
+    [products, categoryFilter],
+  );
 
   const stockMutation = useMutation({
     mutationFn: ({ id, stock }: { id: string; stock: number }) =>
@@ -89,6 +98,18 @@ const EditProduct = () => {
     <div>
       <h2 className="mb-4 text-lg font-semibold text-white">Manage Products</h2>
 
+      <div className="mb-4 flex flex-wrap items-center gap-3">
+        <label className="text-sm font-medium text-neutral-300">Category</label>
+        <select
+          value={categoryFilter}
+          onChange={(e) => setCategoryFilter(e.target.value as "" | "Game" | "Accessories")}
+          className="rounded-lg border border-neutral-700 bg-neutral-950 px-3 py-2.5 text-sm text-white focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500/30"
+        >
+          <option value="">All Categories</option>
+          <option value="Game">Game</option>
+          <option value="Accessories">Accessories</option>
+        </select>
+      </div>
       <div className="overflow-x-auto rounded-xl border border-neutral-800">
         <table className="w-full text-left text-sm">
           <thead>
@@ -102,7 +123,7 @@ const EditProduct = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-neutral-800">
-            {products.map((p) => (
+            {filteredProducts.map((p) => (
               <tr key={p._id} className="text-neutral-300">
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
