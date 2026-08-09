@@ -30,7 +30,15 @@ router.post("/", protect, async (req: Request, res: Response) => {
         .json({ message: "Order must contain at least one item" });
     }
 
+    for (const item of items) {
+      if (!Number.isInteger(item.quantity) || item.quantity <= 0) {
+        return res.status(400).json({ message: "Each item quantity must be at least 1" });
+      }
+    }
+
     let totalAmount = 0;
+    const inventoryUpdates: { productId: string; quantity: number }[] = [];
+
     for (const item of items) {
       const product = await Product.findById(item.product);
       if (!product) {
@@ -38,9 +46,44 @@ router.post("/", protect, async (req: Request, res: Response) => {
           .status(400)
           .json({ message: `Product ${item.product} not found` });
       }
+
+      if (product.stock < item.quantity) {
+        return res.status(409).json({
+          message: `${product.title} only has ${product.stock} item(s) left in stock`,
+        });
+      }
+
       totalAmount += product.price * item.quantity;
+      inventoryUpdates.push({ productId: String(product._id), quantity: item.quantity });
     }
     totalAmount += SHIPPING_COST;
+
+    const updatedProducts: { productId: string; quantity: number }[] = [];
+    try {
+      for (const update of inventoryUpdates) {
+        const updated = await Product.findOneAndUpdate(
+          { _id: update.productId, stock: { $gte: update.quantity } },
+          { $inc: { stock: -update.quantity } },
+          { new: true }
+        );
+
+        if (!updated) {
+          throw new Error("STOCK_CONFLICT");
+        }
+
+        updatedProducts.push(update);
+
+        if (updated.stock <= 0 && updated.isAvailable) {
+          updated.isAvailable = false;
+          await updated.save();
+        }
+      }
+    } catch (err) {
+      for (const rollback of updatedProducts) {
+        await Product.findByIdAndUpdate(rollback.productId, { $inc: { stock: rollback.quantity } });
+      }
+      return res.status(409).json({ message: "Some products are out of stock. Please refresh your cart." });
+    }
 
     const order = await Order.create({
       customer: req.user._id,

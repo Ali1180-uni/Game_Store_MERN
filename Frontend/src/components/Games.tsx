@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import SearchBar from "./searchBar";
 import ProductCard from "./ProductCard";
 import { NavLink } from "react-router-dom";
-import { fetchProducts } from "../Api/api";
+import { fetchProducts } from "../Api/Products.api";
 
 type Game = {
   _id: string;

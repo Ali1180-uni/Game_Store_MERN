@@ -31,6 +31,71 @@ export type UserReview = {
   createdAt: string;
 };
 
+export type ProductDetail = {
+  gameType: string;
+  preOrder: boolean;
+  preOrderReleaseDate?: string | null;
+  platform: string;
+  brand: string;
+};
+
+export type AdminProduct = {
+  _id: string;
+  title: string;
+  description: string;
+  image: string;
+  price: number;
+  isAvailable: boolean;
+  category: "Game" | "Accessories";
+  stock: number;
+  details: ProductDetail[];
+};
+
+export const fetchAdminProducts = async (): Promise<AdminProduct[]> => {
+  const token = localStorage.getItem("token");
+  const response = await api.get("/admin/products", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const createProduct = async (data: FormData) => {
+  const token = localStorage.getItem("token");
+  const response = await api.post("/admin/products", data, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const updateProduct = async (id: string, data: FormData) => {
+  const token = localStorage.getItem("token");
+  const response = await api.put(`/admin/products/${id}`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return response.data;
+};
+
+export const updateProductStock = async (id: string, stock: number) => {
+  const token = localStorage.getItem("token");
+  const response = await api.patch(
+    `/admin/products/${id}/stock`,
+    { stock },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  return response.data;
+};
+
+export const deleteProduct = async (id: string) => {
+  const token = localStorage.getItem("token");
+  const response = await api.delete(`/admin/products/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
 export const fetchAllUsers = async (): Promise<AdminUser[]> => {
   const token = localStorage.getItem("token");
   const response = await api.get("/admin/users", {

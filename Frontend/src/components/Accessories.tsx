@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import SearchBar from "./searchBar";
 import ProductCard from "./ProductCard";
 import { NavLink } from "react-router-dom";
-import { fetchProducts } from "../Api/api";
+import { fetchProducts } from "../Api/Products.api";
 
 type Accessory = {
   _id: string;
@@ -16,8 +16,8 @@ const Accessories = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const { data: accessories = [], isLoading, isError } = useQuery({
-    queryKey: ["products", "Accessory"],
-    queryFn: () => fetchProducts("Accessory"),
+    queryKey: ["products", "Accessories"],
+    queryFn: () => fetchProducts("Accessories"),
   });
 
   const filteredAccessories = useMemo(() => {

@@ -6,8 +6,9 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useAppSelector, useAppDispatch } from "../Redux/hook";
 import { addItem, removeItem, deleteItem } from "../Redux/CartSlice/cartSlice";
 import { useQuery } from "@tanstack/react-query";
-import { fetchProducts } from "../Api/api";
+import { fetchProducts } from "../Api/Products.api";
 import { setCheckoutItems } from "../Redux/CheckoutSlice/CheckoutSlice";
+import toast from "react-hot-toast";
 
 const Cart = () => {
   const items = useAppSelector((state) => state.cart.items);
@@ -22,8 +23,8 @@ const Cart = () => {
   });
 
   const { data: accessories = [], isLoading: accessoriesLoading } = useQuery({
-    queryKey: ["products", "Accessory"],
-    queryFn: () => fetchProducts("Accessory"),
+    queryKey: ["products", "Accessories"],
+    queryFn: () => fetchProducts("Accessories"),
   });
 
   const isLoading = gamesLoading || accessoriesLoading;
@@ -70,10 +71,16 @@ const Cart = () => {
   }
 
   const subtotal = cartEntries.reduce((sum, i) => sum + i.price * i.quantity, 0);
+  const hasStockConflict = cartEntries.some((item) => item.quantity > Math.max(0, item.stock ?? 0));
 
 const handlePlaceOrder = () => {
   if (!token) {
     navigate("/login", { state: { from: location.pathname } });
+    return;
+  }
+
+  if (hasStockConflict) {
+    toast.error("Some items exceed available stock. Reduce quantity first.");
     return;
   }
 
@@ -127,7 +134,7 @@ const handlePlaceOrder = () => {
                 <span className="w-5 text-center text-sm text-white">{item.quantity}</span>
                 <button
                   onClick={() => dispatch(addItem(String(item._id)))}
-                  disabled={item.quantity >= 5}
+                  disabled={item.quantity >= Math.min(5, Math.max(0, item.stock ?? 0))}
                   aria-label="Increase quantity"
                   className="flex h-6 w-6 items-center justify-center rounded-full text-neutral-300 transition-colors hover:bg-neutral-800 disabled:opacity-30"
                 >
@@ -165,6 +172,7 @@ const handlePlaceOrder = () => {
         <div className="mt-6 flex flex-col gap-2.5">
           <button
             onClick={handlePlaceOrder}
+            disabled={hasStockConflict}
             className="w-full rounded-lg bg-violet-600 py-3 text-sm font-semibold text-white transition-colors hover:bg-violet-700"
           >
             Place Order

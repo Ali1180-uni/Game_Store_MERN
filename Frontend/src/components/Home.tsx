@@ -4,7 +4,7 @@ import ShowCase from "./ShowCase";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchProducts } from "../Api/api";
+import { fetchProducts } from "../Api/Products.api";
 
 const Home = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -32,8 +32,8 @@ const Home = () => {
   });
 
   const { data: accessories = [], isLoading: accessoriesLoading } = useQuery({
-    queryKey: ["products", "Accessory"],
-    queryFn: () => fetchProducts("Accessory"),
+    queryKey: ["products", "Accessories"],
+    queryFn: () => fetchProducts("Accessories"),
   });
 
   return (

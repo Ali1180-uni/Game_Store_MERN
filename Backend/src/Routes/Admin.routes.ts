@@ -5,10 +5,12 @@ import { protect } from "../Middleware/auth.middlewares.ts";
 import { requireAdmin } from "../Middleware/admin.middleware.ts";
 import { notifyUser } from "../utils/Notification/notify.ts";
 import { NotificationPurpose } from "../Models/schema.notification.ts";
-import { Product } from "../Models/schema.products.ts";
+import { Product, ProductCategory } from "../Models/schema.products.ts";
 import { Order } from "../Models/schema.order.ts";
 import { Review } from "../Models/schema.reviews.ts";
-import { Notification } from "../Models/schema.notification.ts";
+import { upload } from "../Middleware/upload.ts";
+import { uploadToCloudinary } from "../utils/uploadToCloudinary.ts";
+const MAX_STOCK = 20;
 
 const router = express.Router();
 
@@ -102,6 +104,189 @@ router.patch(
       res.json(user);
     } catch (err) {
       res.status(400).json({ message: "Failed to update role" });
+    }
+  }
+);
+
+const toNumber = (value: unknown) => {
+  if (typeof value === "number") return value;
+  if (typeof value === "string" && value.trim() !== "") {
+    const parsed = Number(value);
+    return Number.isNaN(parsed) ? Number.NaN : parsed;
+  }
+  return Number.NaN;
+};
+
+const parseDetails = (value: unknown) => {
+  if (Array.isArray(value)) return value;
+  if (typeof value === "string" && value.trim() !== "") {
+    try {
+      return JSON.parse(value);
+    } catch {
+      return null;
+    }
+  }
+  return null;
+};
+
+const validateProductBody = (body: any) => {
+  const { title, description, price, category, stock, details } = body;
+
+  if (!title || !description) return "Missing required fields";
+
+  const parsedPrice = Number(price);
+  if (isNaN(parsedPrice) || parsedPrice < 0) return "Invalid price";
+
+  if (!Object.values(ProductCategory).includes(category))
+    return "Invalid category";
+
+  const parsedStock = Number(stock);
+  if (isNaN(parsedStock) || parsedStock < 0 || parsedStock > MAX_STOCK) {
+    return `Stock must be between 0 and ${MAX_STOCK}`;
+  }
+
+  let parsedDetails;
+  try {
+    parsedDetails = typeof details === "string" ? JSON.parse(details) : details;
+  } catch {
+    return "Invalid details format";
+  }
+  if (!Array.isArray(parsedDetails) || parsedDetails.length === 0)
+    return "Missing product details";
+
+  return null;
+};
+
+router.get(
+  "/products",
+  protect,
+  requireAdmin,
+  async (req: Request, res: Response) => {
+    try {
+      const products = await Product.find().sort({ createdAt: -1 });
+      res.json(products);
+    } catch (err) {
+      res.status(500).json({ message: "Failed to fetch products" });
+    }
+  }
+);
+
+router.post(
+  "/products",
+  protect,
+  requireAdmin,
+  upload.single("image"),
+  async (req: Request, res: Response) => {
+    const error = validateProductBody(req.body);
+    if (error) return res.status(400).json({ message: error });
+
+    try {
+      const { title, description, price, category, stock } = req.body;
+      const details = JSON.parse(req.body.details);
+
+      const imageUrl = req.file
+        ? await uploadToCloudinary(req.file.buffer, "products")
+        : req.body.image;
+      if (!imageUrl)
+        return res.status(400).json({ message: "Image is required" });
+
+      const product = await Product.create({
+        title,
+        description,
+        image: imageUrl,
+        price: Number(price),
+        category,
+        stock: Number(stock),
+        details,
+        isAvailable: Number(stock) > 0,
+      });
+
+      res.status(201).json(product);
+    } catch (err) {
+      res.status(400).json({ message: "Failed to create product" });
+    }
+  }
+);
+
+router.put(
+  "/products/:id",
+  protect,
+  requireAdmin,
+  upload.single("image"),
+  async (req: Request, res: Response) => {
+    const error = validateProductBody(req.body);
+    if (error) return res.status(400).json({ message: error });
+
+    try {
+      const { title, description, price, category, stock } = req.body;
+      const details = JSON.parse(req.body.details);
+      const imageUrl = req.file
+        ? await uploadToCloudinary(req.file.buffer, "products")
+        : req.body.image;
+
+      const product = await Product.findByIdAndUpdate(
+        req.params.id,
+        {
+          title,
+          description,
+          image: imageUrl,
+          price: Number(price),
+          category,
+          stock: Number(stock),
+          details,
+          isAvailable: Number(stock) > 0,
+        },
+        { new: true, runValidators: true }
+      );
+
+      if (!product) return res.status(404).json({ message: "Product not found" });
+      res.json(product);
+    } catch (err) {
+      res.status(400).json({ message: "Failed to update product" });
+    }
+  }
+);
+
+router.patch(
+  "/products/:id/stock",
+  protect,
+  requireAdmin,
+  async (req: Request, res: Response) => {
+    const { stock } = req.body as { stock: number };
+
+    if (typeof stock !== "number" || stock < 0 || stock > MAX_STOCK) {
+      return res
+        .status(400)
+        .json({ message: `Stock must be between 0 and ${MAX_STOCK}` });
+    }
+
+    try {
+      const product = await Product.findByIdAndUpdate(
+        req.params.id,
+        { stock, isAvailable: stock > 0 },
+        { new: true }
+      );
+      if (!product)
+        return res.status(404).json({ message: "Product not found" });
+      res.json(product);
+    } catch (err) {
+      res.status(400).json({ message: "Failed to update stock" });
+    }
+  }
+);
+
+router.delete(
+  "/products/:id",
+  protect,
+  requireAdmin,
+  async (req: Request, res: Response) => {
+    try {
+      const product = await Product.findByIdAndDelete(req.params.id);
+      if (!product)
+        return res.status(404).json({ message: "Product not found" });
+      res.json({ message: "Product deleted" });
+    } catch (err) {
+      res.status(400).json({ message: "Failed to delete product" });
     }
   }
 );

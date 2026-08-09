@@ -8,6 +8,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchProductById, fetchReviews, submitReview } from "../Api/api";
 import toast from "react-hot-toast";
 import { setCheckoutItems } from "../Redux/CheckoutSlice/CheckoutSlice";
+import type { ProductDetail } from "../Api/Admin.api";
 
 type ReviewFormData = {
   rating: number;
@@ -20,6 +21,10 @@ type Product = {
   description: string;
   image: string;
   price: number;
+  isAvailable: boolean;
+  category: "Game" | "Accessories";
+  stock: number;
+  details: ProductDetail[];
 };
 
 type ReviewDoc = {
@@ -76,7 +81,9 @@ const ProductPage = () => {
   const qtyInCart = useAppSelector((state) =>
     product ? (state.cart.items[product._id] ?? 0) : 0,
   );
-  const atMax = qtyInCart >= 5;
+  const productMaxQty = product ? Math.min(5, Math.max(0, product.stock)) : 0;
+  const outOfStock = !product || !product.isAvailable || product.stock <= 0;
+  const atMax = qtyInCart >= productMaxQty;
 
   const { data: reviews = [] } = useQuery<ReviewDoc[]>({
     queryKey: ["reviews", product?._id],
@@ -172,22 +179,51 @@ const ProductPage = () => {
             ${product.price.toFixed(2)}
           </p>
 
+          <div className="mt-4 flex flex-wrap gap-2">
+            <span className="rounded-full border border-neutral-700 px-3 py-1 text-xs text-neutral-400">
+              {product.details[0]?.platform}
+            </span>
+            <span className="rounded-full border border-neutral-700 px-3 py-1 text-xs text-neutral-400">
+              {product.details[0]?.gameType}
+            </span>
+            <span className="rounded-full border border-neutral-700 px-3 py-1 text-xs text-neutral-400">
+              {product.details[0]?.brand}
+            </span>
+            {product.details[0]?.preOrder && (
+              <span className="rounded-full bg-violet-500/10 px-3 py-1 text-xs text-violet-400">
+                Pre-Order
+                {product.details[0].preOrderReleaseDate &&
+                  ` · ${new Date(product.details[0].preOrderReleaseDate).toLocaleDateString()}`}
+              </span>
+            )}
+          </div>
+
+          {outOfStock && (
+            <p className="mt-2 text-sm text-red-400">Out of stock</p>
+          )}
+
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <button
               onClick={handleBuyNow}
-              className="flex-1 rounded-lg bg-violet-600 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-violet-700 sm:px-8"
+              disabled={outOfStock}
+              className="flex-1 rounded-lg bg-violet-600 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-violet-700 sm:px-8 disabled:cursor-not-allowed disabled:opacity-40"
             >
               Buy Now
             </button>
             <button
               onClick={() => {
+                if (outOfStock || atMax) return;
                 dispatch(addItem(product._id));
                 toast.success(`${product.title} added to cart`);
               }}
-              disabled={atMax}
+              disabled={atMax || outOfStock}
               className="flex-1 rounded-lg border border-neutral-700 bg-neutral-900 py-3.5 text-sm font-semibold text-white transition-colors hover:border-violet-500/50 hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-40 sm:px-8"
             >
-              {atMax ? "Max Quantity Reached" : "Add to Cart"}
+              {outOfStock
+                ? "Out of Stock"
+                : atMax
+                  ? "Max Quantity Reached"
+                  : "Add to Cart"}
             </button>
           </div>
         </div>
