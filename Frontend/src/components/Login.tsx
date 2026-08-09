@@ -6,6 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import { loginUser } from "../Api/api";
 import { useAppDispatch } from "../Redux/hook";
 import { setCredentials } from "../Redux/AuthSlice/AuthSlice";
+import { AxiosError } from "axios";
 
 type FormData = {
   email: string;
@@ -31,8 +32,10 @@ const Login = () => {
       toast.success("Welcome back!");
       navigate(from, { replace: true });
     },
-    onError: () => {
-      const message = "Login failed. Check your email and password.";
+    onError: (error: AxiosError<{ message: string }>) => {
+      const message =
+        error?.response?.data?.message ??
+        "Login failed. Check your email and password.";
       toast.error(message);
     },
   });
@@ -124,7 +127,9 @@ const Login = () => {
 
             {loginMutation.isError && (
               <p className="text-sm text-red-600">
-                Login failed. Check your email and password.
+                {(loginMutation.error as AxiosError<{ message: string }>)
+                  ?.response?.data?.message ??
+                  "Login failed. Check your email and password."}
               </p>
             )}
 

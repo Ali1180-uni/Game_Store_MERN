@@ -8,7 +8,7 @@ import ReviewsRoutes from "./Routes/Reviews.routes.ts";
 import addressRoutes from "./Routes/Address.routes.ts";
 import orderRoutes from "./Routes/order.routes.ts";
 import notificationRoutes from "./Routes/Notification.routes.ts";
-import adminRoutes from "./Routes/Admin.routtes.ts";
+import adminRoutes from "./Routes/Admin.routes.ts";
 
 dotenv.config();
 
@@ -21,6 +21,7 @@ const corsOptions = {
   origin: 'http://localhost:5173',
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
+  exposedHeaders: ['x-refreshed-token'], // ← required, or JS can't read this header at all
   credentials: true
 };
 

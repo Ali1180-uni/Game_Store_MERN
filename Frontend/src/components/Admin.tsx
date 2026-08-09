@@ -7,6 +7,7 @@ import StarRateIcon from "@mui/icons-material/StarRate";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import LogoutIcon from "@mui/icons-material/Logout";
+import StatCard from "./statCard";
 import { fetchAdminStats } from "../Api/api";
 import { useAppSelector, useAppDispatch } from "../Redux/hook";
 import { logout } from "../Redux/AuthSlice/AuthSlice";
@@ -173,26 +174,5 @@ const Admin = () => {
   );
 };
 
-const StatCard = ({
-  label,
-  value,
-  loading,
-  icon,
-}: {
-  label: string;
-  value?: number;
-  loading: boolean;
-  icon: React.ReactNode;
-}) => (
-  <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5 transition-colors hover:border-violet-500/40">
-    <div className="flex items-center justify-between">
-      <span className="text-sm text-neutral-400">{label}</span>
-      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500/10 text-violet-400">
-        {icon}
-      </span>
-    </div>
-    <p className="mt-4 text-3xl font-bold text-white">{loading ? "—" : value}</p>
-  </div>
-);
 
 export default Admin;

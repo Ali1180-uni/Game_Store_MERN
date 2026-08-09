@@ -65,7 +65,7 @@ router.post("/login", async (req: Request, res: Response) => {
         .json({ message: "This account has been suspended." });
     }
 
-    const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "7d" });
+    const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "1d" });
 
     res.json({
       message: "Login successful",
