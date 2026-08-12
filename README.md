@@ -283,7 +283,3 @@ Distributed under the MIT License. See the [LICENSE](LICENSE) file for more info
 
 Ali1180-uni - Initial work
 
-## Contact
-
-[Your Name] - projectlink - email@example.com
-
