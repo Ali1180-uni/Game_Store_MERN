@@ -23,6 +23,7 @@ import EditOrder from "./components/Admin/EditOrder";
 import AddProduct from "./components/Admin/AddProduct";
 import SendNotification from "./components/Admin/sendNotification";
 import UserReviews from "./components/Admin/userReviews";
+import EditProduct from "./components/Admin/EditProduct";
 
 function App() {
   return (
@@ -39,20 +40,29 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/Product/:id" element={<ProductPage />} />
 
-          {/* Requires login, any role */}
           <Route element={<ProtectedRoute />}>
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/order/:id" element={<Order />} />
           </Route>
 
-          {/* Requires login AND Admin role */}
           <Route element={<ProtectedRoute allowedRoles={["Admin"]} />}>
-            <Route path="/Admin" element={<Admin />} />
-            <Route path="/Admin/users" element={<AddEmployee />} />
-            <Route path="/Admin/products" element={<AddProduct />} />
-            <Route path="/Admin/orders" element={<EditOrder />} />
-            <Route path="/Admin/user-reviews" element={<UserReviews />} />
-            <Route path="/Admin/notifications" element={<SendNotification />} />
+            <Route path="/Admin" element={<Admin />}>
+              <Route path="users" element={<AddEmployee />} />
+              <Route
+                path="products"
+                element={
+                  <div className="space-y-6">
+                    <AddProduct />
+                    <div className="border-t border-neutral-800 pt-6">
+                      <EditProduct />
+                    </div>
+                  </div>
+                }
+              />
+              <Route path="orders" element={<EditOrder />} />
+              <Route path="user-reviews" element={<UserReviews />} />
+              <Route path="notifications" element={<SendNotification />} />
+            </Route>
           </Route>
 
           <Route path="*" element={<Error />} />

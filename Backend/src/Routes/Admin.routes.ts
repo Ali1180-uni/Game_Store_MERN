@@ -6,7 +6,7 @@ import { requireAdmin } from "../Middleware/admin.middleware.ts";
 import { notifyUser } from "../utils/Notification/notify.ts";
 import { NotificationPurpose } from "../Models/schema.notification.ts";
 import { Product, ProductCategory } from "../Models/schema.products.ts";
-import { Order } from "../Models/schema.order.ts";
+import { Order, orderStatus as OrderStatusEnum, paymentStatus as PaymentStatusEnum } from "../Models/schema.order.ts";
 import { Review } from "../Models/schema.reviews.ts";
 import { upload } from "../Middleware/upload.ts";
 import { uploadToCloudinary } from "../utils/uploadToCloudinary.ts";
@@ -456,6 +456,90 @@ router.patch(
     }
   }
 );
+
+// GET /admin/orders — full list, newest first
+router.get("/orders", protect, requireAdmin, async (req: Request, res: Response) => {
+  try {
+    const orders = await Order.find()
+      .populate("customer", "name email")
+      .populate("items.product", "title image price")
+      .populate("shippingAddress")
+      .sort({ createdAt: -1 });
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch orders" });
+  }
+});
+
+// PUT /admin/orders/:id/payment — confirm/fail payment
+router.put("/orders/:id/payment", protect, requireAdmin, async (req: Request, res: Response) => {
+  try {
+    const { paymentStatus } = req.body as { paymentStatus: PaymentStatusEnum };
+    if (!Object.values(PaymentStatusEnum).includes(paymentStatus)) {
+      return res.status(400).json({ message: "Invalid payment status" });
+    }
+
+    const order = await Order.findByIdAndUpdate(
+      req.params.id,
+      { paymentStatus },
+      { new: true, runValidators: true }
+    ).populate("items.product", "title image price").populate("shippingAddress");
+
+    if (!order) return res.status(404).json({ message: "Order not found" });
+
+    await notifyUser(
+      order.customer,
+      NotificationPurpose.ORDER,
+      "Payment Update",
+      `Payment for order #${order._id} is now ${paymentStatus}.`
+    );
+
+    res.json(order);
+  } catch (err) {
+    res.status(400).json({ message: "Failed to update payment status" });
+  }
+});
+
+// PUT /admin/orders/:id/status — processing/delivered/cancelled
+router.put("/orders/:id/status", protect, requireAdmin, async (req: Request, res: Response) => {
+  try {
+    const { orderStatus } = req.body as { orderStatus: OrderStatusEnum };
+    if (!Object.values(OrderStatusEnum).includes(orderStatus)) {
+      return res.status(400).json({ message: "Invalid order status" });
+    }
+
+    const order = await Order.findById(req.params.id);
+    if (!order) return res.status(404).json({ message: "Order not found" });
+
+    // restock on cancel, only once (guard against double-cancel restocking twice)
+    if (orderStatus === OrderStatusEnum.CANCELLED && order.orderStatus !== OrderStatusEnum.CANCELLED) {
+      for (const item of order.items) {
+        await Product.findByIdAndUpdate(item.product, {
+          $inc: { stock: item.quantity },
+          isAvailable: true,
+        });
+      }
+    }
+
+    order.orderStatus = orderStatus;
+    await order.save();
+
+    const populated = await Order.findById(order._id)
+      .populate("items.product", "title image price")
+      .populate("shippingAddress");
+
+    await notifyUser(
+      order.customer,
+      NotificationPurpose.ORDER,
+      "Order Status Updated",
+      `Your order #${order._id} is now ${orderStatus}.`
+    );
+
+    res.json(populated);
+  } catch (err) {
+    res.status(400).json({ message: "Failed to update order status" });
+  }
+});
 
 router.post(
   "/notifications",

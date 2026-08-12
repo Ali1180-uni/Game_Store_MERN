@@ -10,6 +10,7 @@ import orderRoutes from "./Routes/order.routes.ts";
 import notificationRoutes from "./Routes/Notification.routes.ts";
 import adminRoutes from "./Routes/Admin.routes.ts";
 import { generalLimiter, authLimiter } from "./Middleware/rateLimiter.ts";
+import otpRoutes from "./Routes/Otp.routes.ts";
 
 dotenv.config();
 
@@ -37,7 +38,7 @@ app.use("/addresses", addressRoutes);
 app.use("/orders", orderRoutes);
 app.use("/notifications", notificationRoutes);
 app.use("/admin", adminRoutes);
-// apply stricter limiter for auth-related endpoints
+app.use("/otp", otpRoutes);
 app.use("/auth", authLimiter, AuthRoutes);
 
 app.listen(port, (): void => {

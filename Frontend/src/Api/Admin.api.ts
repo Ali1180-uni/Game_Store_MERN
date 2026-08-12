@@ -52,6 +52,25 @@ export type AdminProduct = {
   details: ProductDetail[];
 };
 
+export type AdminOrder = {
+  _id: string;
+  customer: { _id: string; name: string; email: string } | null;
+  items: { product: { _id: string; title: string; image: string; price: number }; quantity: number }[];
+  paymentMethod: "jazzCash" | "card" | "cashOnDelivery";
+  paymentStatus: "Pending" | "Completed" | "Failed";
+  orderStatus: "Pending" | "Processing" | "Delivered" | "Cancelled";
+  shippingAddress: {
+    fullName: string;
+    phone: string;
+    street: string;
+    city: string;
+    province: string;
+  };
+  shippingCost: number;
+  totalAmount: number;
+  createdAt: string;
+};
+
 export const fetchAdminProducts = async (): Promise<AdminProduct[]> => {
   const token = localStorage.getItem("token");
   const response = await api.get("/admin/products", {
@@ -183,6 +202,34 @@ export const deleteReview = async (reviewId: string) => {
   const response = await api.delete(`/admin/reviews/${reviewId}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
+  return response.data;
+};
+
+export const fetchAllOrders = async (): Promise<AdminOrder[]> => {
+  const token = localStorage.getItem("token");
+  const response = await api.get(`/admin/orders`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const updateOrderPayment = async (orderId: string, paymentStatus: string) => {
+  const token = localStorage.getItem("token");
+  const response = await api.put(
+    `/admin/orders/${orderId}/payment`,
+    { paymentStatus },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  return response.data;
+};
+
+export const updateOrderStatus = async (orderId: string, orderStatus: string) => {
+  const token = localStorage.getItem("token");
+  const response = await api.put(
+    `/admin/orders/${orderId}/status`,
+    { orderStatus },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
   return response.data;
 };
 

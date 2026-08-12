@@ -6,6 +6,7 @@ import { fetchReviews, submitReview } from "./Reviews.api";
 import { createOrderApi, fetchOrder } from "./Orders.api";
 import { registerUser, loginUser } from "./Users.api";
 import { fetchNotifications, markNotificationRead } from "./Notification.api";
+import { sendOtp, verifyOtp } from "./otpVerification";
 import {
   fetchAllUsers,
   sendAdminNotification,
@@ -44,4 +45,6 @@ export {
   deleteUser,
   fetchUserReviews,
   updateAccountStatus,
+  sendOtp,
+  verifyOtp,
 };
