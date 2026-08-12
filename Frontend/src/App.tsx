@@ -17,7 +17,12 @@ import { Toaster } from "react-hot-toast";
 import Order from "./components/Order";
 import Checkout from "./components/Checkout";
 import ProtectedRoute from "./components/ProtectedRoute";
-import Admin from "./components/Admin";
+import Admin from "./components/AdminDashboard";
+import AddEmployee from "./components/Admin/AddEmployee";
+import EditOrder from "./components/Admin/EditOrder";
+import AddProduct from "./components/Admin/AddProduct";
+import SendNotification from "./components/Admin/sendNotification";
+import UserReviews from "./components/Admin/userReviews";
 
 function App() {
   return (
@@ -42,7 +47,12 @@ function App() {
 
           {/* Requires login AND Admin role */}
           <Route element={<ProtectedRoute allowedRoles={["Admin"]} />}>
-            <Route path="/admin" element={<Admin />} />
+            <Route path="/Admin" element={<Admin />} />
+            <Route path="/Admin/users" element={<AddEmployee />} />
+            <Route path="/Admin/products" element={<AddProduct />} />
+            <Route path="/Admin/orders" element={<EditOrder />} />
+            <Route path="/Admin/user-reviews" element={<UserReviews />} />
+            <Route path="/Admin/notifications" element={<SendNotification />} />
           </Route>
 
           <Route path="*" element={<Error />} />

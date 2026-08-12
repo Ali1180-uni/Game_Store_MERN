@@ -9,6 +9,7 @@ import addressRoutes from "./Routes/Address.routes.ts";
 import orderRoutes from "./Routes/order.routes.ts";
 import notificationRoutes from "./Routes/Notification.routes.ts";
 import adminRoutes from "./Routes/Admin.routes.ts";
+import { generalLimiter, authLimiter } from "./Middleware/rateLimiter.ts";
 
 dotenv.config();
 
@@ -16,6 +17,9 @@ const app: Express = express();
 const port: number = 5000;
 
 app.use(express.json());
+
+// apply a general rate limiter to all API routes
+app.use(generalLimiter);
 
 const corsOptions = {
   origin: 'http://localhost:5173',
@@ -33,7 +37,8 @@ app.use("/addresses", addressRoutes);
 app.use("/orders", orderRoutes);
 app.use("/notifications", notificationRoutes);
 app.use("/admin", adminRoutes);
-app.use("/auth", AuthRoutes);
+// apply stricter limiter for auth-related endpoints
+app.use("/auth", authLimiter, AuthRoutes);
 
 app.listen(port, (): void => {
   console.log(`Backend running on port ${port}`);

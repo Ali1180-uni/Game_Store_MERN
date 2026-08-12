@@ -24,6 +24,7 @@ export type AdminStats = {
 };
 
 export type UserReview = {
+  user: { name: string; email: string } | null;
   _id: string;
   product: { _id: string; title: string; image: string };
   rating: number;
@@ -156,6 +157,30 @@ export const deleteUser = async (id: string) => {
 export const fetchUserReviews = async (userId: string): Promise<UserReview[]> => {
   const token = localStorage.getItem("token");
   const response = await api.get(`/admin/users/${userId}/reviews`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const fetchAllReviews = async (): Promise<UserReview[]> => {
+  const token = localStorage.getItem("token");
+  const response = await api.get(`/admin/reviews`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const updateReview = async (reviewId: string, data: { rating: number; comment: string }) => {
+  const token = localStorage.getItem("token");
+  const response = await api.put(`/admin/reviews/${reviewId}`, data, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const deleteReview = async (reviewId: string) => {
+  const token = localStorage.getItem("token");
+  const response = await api.delete(`/admin/reviews/${reviewId}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   return response.data;

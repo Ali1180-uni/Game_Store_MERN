@@ -63,6 +63,18 @@ const Navbar = () => {
             </NavLink>
           );
         })}
+        {token && user?.role === "Admin" && (
+          <NavLink
+            to="/Admin"
+            className={`text-sm font-medium transition-colors ${
+              location.pathname === "/Admin"
+                ? "text-black dark:text-white"
+                : "text-gray-500 dark:text-neutral-400 hover:text-black dark:hover:text-white"
+            }`}
+          >
+            Admin
+          </NavLink>
+        )}
         {token && <NotificationBell />}
         {token ? (
           <ProfileDropdown />
@@ -108,6 +120,16 @@ const Navbar = () => {
               </NavLink>
             );
           })}
+
+          {token && user?.role === "Admin" && (
+            <NavLink
+              to="/Admin"
+              onClick={() => setMenuOpen(false)}
+              className="text-sm font-medium py-2 text-gray-500 transition-colors hover:text-black dark:text-neutral-400 dark:hover:text-white"
+            >
+              Admin
+            </NavLink>
+          )}
 
           {token && user ? (
             <div className="mt-2 flex items-center justify-between border-t border-neutral-800 pt-3">

@@ -25,6 +25,7 @@
     "typescript": "^7.0.2"
   },
   "dependencies": {
+    "express-rate-limit": "^6.10.0",
     "axios": "^1.18.1",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.10.0",

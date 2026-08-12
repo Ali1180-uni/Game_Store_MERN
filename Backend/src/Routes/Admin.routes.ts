@@ -353,6 +353,68 @@ router.get(
   }
 );
 
+// Fetch all reviews (admin)
+router.get(
+  "/reviews",
+  protect,
+  requireAdmin,
+  async (req: Request, res: Response) => {
+    try {
+      const reviews = await Review.find()
+        .populate("user", "name email")
+        .populate("product", "title image")
+        .sort({ createdAt: -1 });
+      res.json(reviews);
+    } catch (err) {
+      res.status(500).json({ message: "Failed to fetch reviews" });
+    }
+  }
+);
+
+// Update a review (admin)
+router.put(
+  "/reviews/:id",
+  protect,
+  requireAdmin,
+  async (req: Request, res: Response) => {
+    try {
+      const { rating, comment } = req.body as {
+        rating?: number;
+        comment?: string;
+      };
+
+      const update: any = {};
+      if (typeof rating === "number") update.rating = rating;
+      if (typeof comment === "string") update.comment = comment;
+
+      const review = await Review.findByIdAndUpdate(req.params.id, update, {
+        new: true,
+        runValidators: true,
+      });
+      if (!review) return res.status(404).json({ message: "Review not found" });
+      res.json(review);
+    } catch (err) {
+      res.status(400).json({ message: "Failed to update review" });
+    }
+  }
+);
+
+// Delete a review (admin)
+router.delete(
+  "/reviews/:id",
+  protect,
+  requireAdmin,
+  async (req: Request, res: Response) => {
+    try {
+      const review = await Review.findByIdAndDelete(req.params.id);
+      if (!review) return res.status(404).json({ message: "Review not found" });
+      res.json({ message: "Review deleted" });
+    } catch (err) {
+      res.status(400).json({ message: "Failed to delete review" });
+    }
+  }
+);
+
 router.patch(
   "/users/:id/status",
   protect,
